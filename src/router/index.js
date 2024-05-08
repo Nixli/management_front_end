@@ -84,7 +84,7 @@ export const menuRoutes = [
   //财务端工资管理
   {
     path: '/Salary',
-    component: () => import('@/layout/Layout.vue'),
+    component: () => import('@/layout/Layout.vue'),//页面布局已设置不要更改
     meta: { title: '工资管理', menu: true, icon: 'el-icon-bank-card', role: ['财务'] },
     children: [
       {
