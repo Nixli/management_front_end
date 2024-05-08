@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper">
     <div class="login-form">
-      <h2 class="login-title">欢迎来到财务管理系统</h2>
+      <h2 class="login-title">欢迎来到餐饮管理系统</h2>
       <!-- 表单的容器 -->
       <el-form ref="ruleform" :model="form" :rules="rules">
 
