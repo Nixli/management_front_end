@@ -10,7 +10,7 @@
             <!-- 使用 v-if 判断 role 的内容，如果是老板则不显示新增按钮 -->
             <el-button v-if="role !== '老板'" style="margin-left: 20px" @click="addOpen">新增门店</el-button>
         </el-card>
-        
+
         <!-- 账套区域 -->
         <el-row>
             <el-col v-for="item in accountBooksList" :span="8">
@@ -31,7 +31,7 @@
                     <p style="margin-top:20px">门店地址：{{ item.storeAddress }}</p>
                     <p style="margin-top:20px">门店电话：{{ item.storePhone }}</p>
                     <p style="margin-top:20px">门店描述：{{ item.storeDes }}</p>
-                    
+
                 </el-card>
             </el-col>
         </el-row>
@@ -39,107 +39,66 @@
         <!-- 新增弹窗区域 -->
         <el-dialog title="新增门店具体信息" :visible.sync="dialogFormVisible">
             <el-form :model="userFormData" class="demo-form-inline" label-width="120px">
+                <el-form-item label="门店地址">
+                    <el-input v-model="userFormData.storeAddress" placeholder="门店地址"></el-input>
+                </el-form-item>
+
+                <el-form-item label="门店描述">
+                    <el-input v-model="userFormData.storeDes" placeholder="门店描述"></el-input>
+                </el-form-item>
+
                 <el-form-item label="门店名称">
-                    <el-input v-model="userFormData.bookName" placeholder="门店名称"></el-input>
+                    <el-input v-model="userFormData.storeName" placeholder="门店名称"></el-input>
                 </el-form-item>
-                <el-form-item label="单位名称">
-                    <el-input v-model="userFormData.companyName" placeholder="单位名称"></el-input>
-                </el-form-item>
-                <el-form-item label="经营地址">
-                    <el-input v-model="userFormData.businessAddress" placeholder="经营地址"></el-input>
-                </el-form-item>
-                <el-form-item label="行业">
-                    <el-input v-model="userFormData.industry" placeholder="行业"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人">
-                    <el-input v-model="userFormData.contactPerson" placeholder="联系人"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人电话">
-                    <el-input v-model="userFormData.contactPhoneNumber" placeholder="联系人电话"></el-input>
-                </el-form-item>
-                <el-form-item label="纳税类型">
-                    <el-select v-model="userFormData.vatType" placeholder="请选择纳税类型">
-                        <el-option label="一般纳税人" value="generalTaxpayer"></el-option>
-                        <el-option label="小规模纳税人" value="smallTaxpayer"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="账套备注">
-                    <el-input v-model="userFormData.notes" placeholder="账套备注"></el-input>
+
+                <el-form-item label="门店号码">
+                    <el-input v-model="userFormData.storePhone" placeholder="门店号码"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="submit">提交</el-button>
                 </el-form-item>
-
             </el-form>
         </el-dialog>
 
         <!-- 查看弹窗区域 -->
         <el-dialog title="查看账套具体信息" :visible.sync="isTrueOrFalse">
             <el-form :model="userFormData" class="demo-form-inline" label-width="120px">
-                <el-form-item label="账套名称">
-                    <el-input v-model="userFormData.bookName" placeholder="账套名称"></el-input>
+                <el-form-item label="门店地址">
+                    <el-input v-model="userFormData.storeAddress" placeholder="门店地址"></el-input>
                 </el-form-item>
-                <el-form-item label="单位名称">
-                    <el-input v-model="userFormData.companyName" placeholder="单位名称"></el-input>
+
+                <el-form-item label="门店描述">
+                    <el-input v-model="userFormData.storeDes" placeholder="门店描述"></el-input>
                 </el-form-item>
-                <el-form-item label="经营地址">
-                    <el-input v-model="userFormData.businessAddress" placeholder="经营地址"></el-input>
+
+                <el-form-item label="门店名称">
+                    <el-input v-model="userFormData.storeName" placeholder="门店名称"></el-input>
                 </el-form-item>
-                <el-form-item label="行业">
-                    <el-input v-model="userFormData.industry" placeholder="行业"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人">
-                    <el-input v-model="userFormData.contactPerson" placeholder="联系人"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人电话">
-                    <el-input v-model="userFormData.contactPhoneNumber" placeholder="联系人电话"></el-input>
-                </el-form-item>
-                <el-form-item label="纳税类型">
-                    <el-input v-model="userFormData.vatType" placeholder="纳税类型"></el-input>
-                </el-form-item>
-                <el-form-item label="账套备注">
-                    <el-input v-model="userFormData.notes" placeholder="账套备注"></el-input>
+
+                <el-form-item label="门店号码">
+                    <el-input v-model="userFormData.storePhone" placeholder="门店号码"></el-input>
                 </el-form-item>
             </el-form>
         </el-dialog>
 
         <!-- 修改弹窗区域 -->
-        <el-dialog title="修改账套信息" :visible.sync="show">
+        <el-dialog title="修改门店信息" :visible.sync="show">
             <el-form :model="userFormData" class="demo-form-inline" label-width="120px">
 
-                <el-form-item label="账套名称">
-                    <el-input v-model="userFormData.bookName" placeholder="账套名称"></el-input>
+                <el-form-item label="门店地址">
+                    <el-input v-model="userFormData.storeAddress" placeholder="门店地址"></el-input>
                 </el-form-item>
 
-                <el-form-item label="单位名称">
-                    <el-input v-model="userFormData.companyName" placeholder="单位名称"></el-input>
+                <el-form-item label="门店描述">
+                    <el-input v-model="userFormData.storeDes" placeholder="门店描述"></el-input>
                 </el-form-item>
 
-                <el-form-item label="经营地址">
-                    <el-input v-model="userFormData.businessAddress" placeholder="经营地址"></el-input>
+                <el-form-item label="门店名称">
+                    <el-input v-model="userFormData.storeName" placeholder="门店名称"></el-input>
                 </el-form-item>
 
-                <el-form-item label="行业">
-                    <el-input v-model="userFormData.industry" placeholder="行业"></el-input>
-                </el-form-item>
-
-                <el-form-item label="联系人">
-                    <el-input v-model="userFormData.contactPerson" placeholder="联系人"></el-input>
-                </el-form-item>
-
-                <el-form-item label="联系人电话">
-                    <el-input v-model="userFormData.contactPhoneNumber" placeholder="联系人电话"></el-input>
-                </el-form-item>
-
-                <el-form-item label="纳税类型">
-                    <el-select v-model="userFormData.vatType" placeholder="请选择纳税类型">
-                        <el-option label="一般纳税人" value="generalTaxpayer"></el-option>
-                        <el-option label="小规模纳税人" value="smallTaxpayer"></el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item label="账套备注">
-                    <el-input v-model="userFormData.notes" placeholder="账套备注"></el-input>
+                <el-form-item label="门店号码">
+                    <el-input v-model="userFormData.storePhone" placeholder="门店号码"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -165,17 +124,12 @@ export default {
             dialogFormVisible: false,
             isTrueOrFalse: false,
             userFormData: {
-                bookID: '',
-                bookName: '',
-                companyName: '',
-                businessAddress: '',
-                industry: '',
-                contactPerson: '',
-                contactPhoneNumber: '',
-                vatType: '',
-                notes: '',
+                storeId: '',
+                storeAddress: '',
+                storeDes: '',
+                storeName: '',
+                storePhone: '',
             },
-            id: '',
             role: '',
             show: false
         };
@@ -191,7 +145,7 @@ export default {
                 url: "http://localhost:8080/store/findAll",
             });
             this.accountBooksList = res.data.data,
-            console.log(this.accountBooksList)
+                console.log(this.accountBooksList)
         },
 
         viewAccountDetails(bookID, bookName) {
@@ -210,14 +164,11 @@ export default {
             // 记录状态
             // 重置userFormData
             this.userFormData = {
-                bookName: '',
-                companyName: '',
-                businessAddress: '',
-                industry: '',
-                contactPerson: '',
-                contactPhoneNumber: '',
-                vatType: '',
-                notes: '',
+                storeId: '',
+                storeAddress: '',
+                storeDes: '',
+                storeName: '',
+                storePhone: '',
             }
         },
         updateOpen(book) {
@@ -228,7 +179,7 @@ export default {
         async update() {
             const data = { ...this.userFormData }
             const res = await axios({
-                url: '/accountBooks',
+                url: "http://localhost:8080/store/updateStore",
                 method: 'post',
                 data: data
             })
@@ -244,9 +195,11 @@ export default {
 
         async submit() {
             // 拷贝userFormData到data
-            const data = { ...this.userFormData }
+            const data = {
+                ...this.userFormData
+            }
             const res = await axios({
-                url: '/accountBooks',
+                url: "http://localhost:8080/store/addStore",
                 method: 'post',
                 data: data
             })
