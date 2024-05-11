@@ -15,6 +15,10 @@ const commonRoutes = [
     path: '/FinanceAccountBooks',
     component: () => import('@/views/accountBooks/FinanceAccountBooks.vue')
   },
+  {
+    path:'/Store',
+    component: () => import('@/views/store/Store.vue')
+  }
 
 
 ]
