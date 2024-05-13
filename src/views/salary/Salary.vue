@@ -204,7 +204,7 @@ export default {
                 insurance: 0.00,
                 actualSalary: 0.00
             },
-            bookID: localStorage.getItem('bookID'),
+            bookID: 0,
             employeeID: '',
             actionType: '',
             salaryID: '',
@@ -214,6 +214,7 @@ export default {
         };
     },
     created() {
+        this.bookID = localStorage.getItem('bookID');
         this.getList()
     },
 
@@ -249,7 +250,7 @@ export default {
             };
             const res = await axios({
                 method: "get",
-                url: "/managementSalary",
+                url: "http://172.16.110.32:8080/salary/findAll",
                 params: {
                     pageno: this.pageno,
                     pagesize: this.pagesize,
@@ -258,7 +259,7 @@ export default {
                 },
             });
             // 修改日期格式
-            this.list = res.data.data.list.map(item => {
+            this.list = res.data.data.map(item => {
                 return {
                     ...item,
                     baseSalary: parseFloat(item.baseSalary),
@@ -274,7 +275,7 @@ export default {
                 };
             });
             /* console.log(this.list) */
-            this.total = res.data.data.total;
+            this.total = res.data.count;
 
             const employeeListRes = await axios({
                 url: "/employee",
