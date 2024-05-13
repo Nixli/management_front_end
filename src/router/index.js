@@ -84,6 +84,25 @@ export const menuRoutes = [
     ]
   },
 
+   //系统管理
+   {
+    path:'/system',
+    component: () => import('@/layout/Layout.vue'),
+    meta: { title: '系统管理', menu: true, icon: 'el-icon-s-tools', role: ['管理员'] },
+    children: [
+      {
+        path: '/System',
+        component: () => import('@/views/system/System'),
+        meta: { title: '员工管理' },
+      },
+      {
+        path: '/Role',
+        component: () => import('@/views/system/Role'),
+        meta: { title: '角色管理' },
+      }
+    ]
+  },
+
   /* 工资管理 */
   //财务端工资管理
   {
