@@ -250,7 +250,7 @@ export default {
             };
             const res = await axios({
                 method: "get",
-                url: "http://172.16.110.32:8080/salary/findAll",
+                url: "http://localhost:8080/salary/findAll",
                 params: {
                     pageno: this.pageno,
                     pagesize: this.pagesize,
@@ -278,7 +278,7 @@ export default {
             this.total = res.data.count;
 
             const employeeListRes = await axios({
-                url: "/employee",
+                url: "http://localhost:8080/employee/findAllEmployee",
                 method: "get",
                 params: {
                     bookID: this.bookID

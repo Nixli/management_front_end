@@ -143,7 +143,7 @@ export default {
         async getList() {
             const res = await axios({
                 method: "get",
-                url: "http://172.16.110.32:8080/store/findAll",
+                url: "http://localhost:8080/store/findAll",
             });
             this.accountBooksList = res.data.data,
                 console.log(this.accountBooksList)
@@ -181,7 +181,7 @@ export default {
         async update() {
             const data = { ...this.userFormData }
             const res = await axios({
-                url: "http://172.16.110.32:8080/store/updateStore",
+                url: "http://localhost:8080/store/updateStore",
                 method: 'post',
                 data: data
             })
@@ -201,7 +201,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/store/addStore",
+                url: "http://localhost:8080/store/addStore",
                 method: 'post',
                 data: data
             })

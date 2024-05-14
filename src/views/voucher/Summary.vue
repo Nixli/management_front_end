@@ -119,7 +119,7 @@ export default {
     methods: {
         async getList() {
             const res = await axios({
-                url: "/summary",
+                url: "http://172.16.110.32:8080/summary/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -127,8 +127,8 @@ export default {
                     pagesize: this.pagesize,
                 }
             });
-            this.list = res.data.data.list;
-            this.total = res.data.data.total;
+            this.list = res.data.data;
+            this.total = res.data.count;
         },
         // 点击搜索
         search() {
@@ -157,7 +157,7 @@ export default {
                     summaryID: row.summaryID,
                 }
                 const res = await axios({
-                    url: "/deleteSummary",
+                    url: "http://172.16.110.32:8080/summary/delete",
                     method: "post",
                     data: data
                 })
@@ -172,7 +172,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "/summary",
+                url: "http://172.16.110.32:8080/summary/update",
                 method: "post",
                 data: data
             })
@@ -188,7 +188,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "/summary",
+                url: "http://172.16.110.32:8080/summary/add",
                 method: "post",
                 data: data
             })

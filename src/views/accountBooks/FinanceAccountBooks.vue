@@ -134,7 +134,7 @@ export default {
         async getList() {
             const res = await axios({
                 method: "get",
-                url: "http://172.16.110.32:8080/accountBook/findByStoreId",
+                url: "http://localhost/accountBook/findByStoreId",
                 params: {
                     storeId: localStorage.getItem('storeId')
                 }
@@ -195,7 +195,7 @@ export default {
                 data.state = '启用'
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/accountBook/updateAccountBook",
+                url: "http://localhost:8080/accountBook/updateAccountBook",
                 method: 'post',
                 data: data
             })
@@ -214,7 +214,7 @@ export default {
                 state: '启用'
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/accountBook/addAccountBook",
+                url: "http://localhost:8080/accountBook/addAccountBook",
                 method: 'post',
                 data: data
             })

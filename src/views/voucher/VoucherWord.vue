@@ -130,7 +130,7 @@ export default {
     methods: {
         async getList() {
             const res = await axios({
-                url: "/VoucherWord",
+                url: "http://172.16.110.32:8080/voucherWord/findAll",
                 method: "get",
             });
             this.list = res.data.data
@@ -152,7 +152,7 @@ export default {
                     voucherWordID: row.voucherWordID,
                 }
                 const res = await axios({
-                    url: "/deleteVoucherWord",
+                    url: "http://172.16.110.32:8080/voucherWord/delete",
                     method: "post",
                     data: data
                 })
@@ -168,7 +168,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "/voucherWord",
+                url: "http://172.16.110.32:8080/voucherWord/update",
                 method: "post",
                 data: data
             })
@@ -184,7 +184,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "/voucherWord",
+                url: "http://172.16.110.32:8080/voucherWord/add",
                 method: "post",
                 data: data
             })
