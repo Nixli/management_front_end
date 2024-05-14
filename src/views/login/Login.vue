@@ -8,8 +8,8 @@
         <!-- 用户账号 -->
         <el-form-item prop="account">
           <!-- 该表单项的内容 -->
-          <el-input suffix-icon="icon-yonghu iconfont" prefix-icon="el-icon-search" placeholder="请输入账号"
-            v-model="form.username"></el-input>
+          <el-input suffix-icon="icon-yonghu iconfont" prefix-icon="el-icon-search" placeholder="请输入手机号/邮箱"
+            v-model="form.content"></el-input>
         </el-form-item>
 
         <!-- 用户密码 -->
@@ -22,14 +22,14 @@
           </el-input>
         </el-form-item>
 
-        <!-- 用户角色 -->
+        <!-- 用户角色
         <el-form-item prop="role">
           <el-select style="width: 100%;" v-model="form.role">
             <el-option label="财务" value="财务"></el-option>
             <el-option label="员工" value="员工"></el-option>
             <el-option label="老板" value="老板"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
         <!-- 登录按钮 -->
         <el-form-item>
@@ -53,17 +53,17 @@ export default {
 
       // 表单的数据
       form: {
-        username: '',
+        content: '',
         password: '',
-        role: '',
+        // role: '',
       },
 
       // 表单的规则集: 键名： 你要对表单数据对象下的哪一个属性配置规则, 键名： 真正的规则：数组， 当你只有一个规则的时候，可以就是一个对象
       rules: {
         // 非空校验
-        username: { required: true, message: '请输入账号', trigger: 'change' },
+        content: { required: true, message: '请输入手机号/邮箱', trigger: 'change' },
         password: { required: true, message: '请输入密码', trigger: 'change' },
-        role:{ required: true, message: '请选择角色', trigger: 'change' }
+        // role:{ required: true, message: '请选择角色', trigger: 'change' }
       }
 
     }
@@ -78,25 +78,24 @@ export default {
 
       const LoginResult = await axios({
         method: "post",
-        url: "/loginUser",
+        url: "http://localhost:8080/employee/login",
         data: this.form,
       })
       // 登录成功，把用户的id和用户的角色存放到本地
-      if (LoginResult.data.code == 1) {
-
+      if (LoginResult.data.code == 200) {
+        
         localStorage.setItem("employeeID", LoginResult.data.data.employeeID);
-        localStorage.setItem("role", LoginResult.data.data.role);
-
+        localStorage.setItem("role", LoginResult.data.data.roleName);
         // 根据角色
-        if (this.form.role == '财务') {
-          localStorage.setItem('name',LoginResult.data.data.name)
+        if (LoginResult.data.data.roleName == '财务') {
+          localStorage.setItem('name',LoginResult.data.data.employeeID)
           // 等待两秒后跳转页面
           Message.success('即将进入账套界面')
           setTimeout(() => {
             // 跳转页面
             this.$router.push('/financeAccountBooks');
           }, 2000);
-        }else if (this.form.role == '老板') {
+        }else if (LoginResult.data.data.roleName == '老板') {
           Message.success('即将进入账套界面')
           setTimeout(() => {
             // 跳转页面
