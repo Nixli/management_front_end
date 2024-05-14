@@ -134,7 +134,7 @@ export default {
         async getList() {
             const res = await axios({
                 method: "get",
-                url: "http://localhost/accountBook/findByStoreId",
+                url: "http://localhost:8080/accountBook/findByStoreId",
                 params: {
                     storeId: localStorage.getItem('storeId')
                 }

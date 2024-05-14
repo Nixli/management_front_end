@@ -93,7 +93,7 @@ export default {
           Message.success('即将进入账套界面')
           setTimeout(() => {
             // 跳转页面
-            this.$router.push('/financeAccountBooks');
+            this.$router.push('/Store');
           }, 2000);
         }else if (LoginResult.data.data.roleName == '老板') {
           Message.success('即将进入账套界面')
