@@ -183,7 +183,7 @@ export default {
         data.roleID = this.roleID
       }
       const res = await axios({
-        url: 'http://localhost:8081/restaurant_management_system/role/update',
+        url: 'http://localhost:8080/role/update',
         method: 'post',
         data: data
       })

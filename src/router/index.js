@@ -102,7 +102,24 @@ export const menuRoutes = [
       }
     ]
   },
-
+ /* 订单管理 */
+  {
+    path: '/order',
+    component: () => import('@/layout/Layout.vue'),//页面布局已设置不要更改
+    meta: { title: '订单', menu: true, icon: 'el-icon-bank-card', role: ['服务员','管理员'] },
+    children: [
+      {
+        path: '/Order',
+        meta: { title: '下单界面', menu: true },
+        component: () => import('@/views/order/Order'),
+      },
+      {
+        path: '/Order2',
+        meta: { title: '订单管理', menu: true },
+        component: () => import('@/views/order/Order2'),
+      }
+    ]
+  },
   /* 工资管理 */
   //财务端工资管理
   {
