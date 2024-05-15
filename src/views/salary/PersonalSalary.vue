@@ -27,11 +27,12 @@
         <el-card style="margin-top: 20px;">
 
             <el-card>
-                <span style="font-size: 16px;font-weight: bold;font-family: 'Times New Roman', Times, serif;">员工工资表</span>
+                <span
+                    style="font-size: 16px;font-weight: bold;font-family: 'Times New Roman', Times, serif;">员工工资表</span>
             </el-card>
 
             <el-table :data="list" style="width: 100%">
-                <el-table-column prop="employee.name" label="姓名"> </el-table-column>
+                <el-table-column prop="employee.employeeDes" label="姓名"> </el-table-column>
                 <el-table-column prop="baseSalary" label="基本工资"> </el-table-column>
                 <el-table-column prop="allowance" label="津贴"> </el-table-column>
                 <el-table-column prop="bonus" label="奖金"> </el-table-column>
@@ -72,8 +73,8 @@ export default {
             total: 0,
             // 搜索条件
             params: {
-                assetName: dayjs().subtract(1, 'year').format('YYYY-MM-DD HH:mm:ss'),
-                brandModel: dayjs().format('YYYY-MM-DD HH:mm:ss')
+                assetName: null,
+                brandModel: null
             },
             bookID: localStorage.getItem('bookID'),
             employeeID: localStorage.getItem('employeeID')
@@ -88,27 +89,29 @@ export default {
 
             const formattedParams = {
                 ...this.params,
-                assetName: dayjs(this.params.assetName).format('YYYY-MM-DD HH:mm:ss'),
-                brandModel: dayjs(this.params.brandModel).format('YYYY-MM-DD HH:mm:ss'),
+                assetName: this.params.assetName ? dayjs(this.params.assetName).format('YYYY-MM-DD HH:mm:ss') : null,
+                brandModel: this.params.brandModel ? dayjs(this.params.brandModel).format('YYYY-MM-DD HH:mm:ss') : null,
             };
+
             const res = await axios({
                 method: "get",
-                url: "/salary",
+                url: "http://localhost:8080/salary/findAllAndEmployee",
                 params: {
                     pageno: this.pageno,
                     pagesize: this.pagesize,
                     employeeID: this.employeeID,
-                    ...formattedParams
+                    ...formattedParams,
+                    bookId: this.bookID
                 },
             });
             // 修改日期格式
-            this.list = res.data.data.list.map(item => {
+            this.list = res.data.data.map(item => {
                 return {
                     ...item,
                     payoutDate: dayjs(item.payoutDate).format('YYYY-MM-DD'),
                 };
             });
-            this.total = res.data.data.total;
+            this.total = res.data.data.count;
         },
         // 点击搜索
         search() {
@@ -128,8 +131,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
 .row-box {
     width: 100%;
     display: flex;

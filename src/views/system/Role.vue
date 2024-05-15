@@ -120,7 +120,7 @@ export default {
     async getList() {
             const res = await axios({
                 method: "get",
-                url: "http://localhost:8081/restaurant_management_system/role/findAll",
+                url: "http://localhost:8080/role/findAll",
                 params: {
                     
                 }
