@@ -184,6 +184,7 @@ export default {
         email: '',
         bankcardID: '',
         createTime: '',
+        endTime: '',
         state: '',
         isResign: '',
         accountBook: { bookID: localStorage.getItem('bookID') } // 使用关系属性名
@@ -316,6 +317,7 @@ export default {
       this.userFormData.createTime = row.createTime
       this.userFormData.endTime = row.endTime
       this.userFormData.state = row.state
+      
       // 记录id
       this.employeeID = row.employeeID
       this.userFormData.isResign = ""
@@ -332,6 +334,9 @@ export default {
         data.employeeID = this.employeeID
         if(data.state === '离职') {
           data.endTime = new Date()
+        }
+        if(data.state === '在职') {
+          data.endTime = ""
         }
         const res = await axios({
           url: 'http://localhost:8080/employee/updateEmployee',
