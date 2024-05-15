@@ -83,11 +83,12 @@ export default {
       })
       // 登录成功，把用户的id和用户的角色存放到本地
       if (LoginResult.data.code == 200) {
-        
+        localStorage.setItem("bookID", LoginResult.data.data.bookID);
+        localStorage.setItem("employeeDes", LoginResult.data.data.employeeDes);
         localStorage.setItem("employeeID", LoginResult.data.data.employeeID);
         localStorage.setItem("role", LoginResult.data.data.roleName);
         // 根据角色
-        if (LoginResult.data.data.roleName == '财务') {
+        if (localStorage.getItem('role') == '财务') {
           localStorage.setItem('name',LoginResult.data.data.employeeID)
           // 等待两秒后跳转页面
           Message.success('即将进入门店界面')
@@ -95,11 +96,11 @@ export default {
             // 跳转页面
             this.$router.push('/Store');
           }, 2000);
-        }else if (LoginResult.data.data.roleName == '老板') {
+        }else if (localStorage.getItem('role') == '管理员') {
           Message.success('即将进入门店界面')
           setTimeout(() => {
             // 跳转页面
-            this.$router.push('/financeAccountBooks');
+            this.$router.push('/Store');
           }, 2000);
         }else {
           // localStorage.setItem('bookID', LoginResult.data.data.accountBook.bookID)

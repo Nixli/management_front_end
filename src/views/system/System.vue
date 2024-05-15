@@ -306,7 +306,7 @@ export default {
       this.userFormData.sex = row.sex
       this.userFormData.roleID = row.roleID
       this.userFormData.storeID = row.storeID
-      this.userFormData.password = row.password
+      this.userFormData.password = ""
       this.userFormData.phone = row.phone
       this.userFormData.email = row.email
       this.userFormData.bankcardID = row.bankcardID
