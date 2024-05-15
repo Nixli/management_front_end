@@ -25,7 +25,7 @@
                         <!-- 右侧部分，包括查询输入框 -->
                         <el-col :span="9" :offset="14">
                             <el-input placeholder="请输入报销类型" prefix-icon="el-icon-search"
-                                v-model="params.assetName"></el-input>
+                                v-model="params.category"></el-input>
                         </el-col>
                         <el-col :span="3" :offset="0.5">
                             <el-button type="primary" @click="search">查询</el-button>
@@ -33,6 +33,8 @@
                     </el-row>
                 </div>
                 <el-table :data="list" style="width: 100%;margin-top: 15px;" :header-row-class-name="tableHeaderClassName">
+                    <!-- <el-table-column prop="employee" label="报销员工" align="center"> </el-table-column> -->
+                    <el-table-column prop="reimbursementId" label="编号" align="center"> </el-table-column>
                     <el-table-column prop="amount" label="报销金额" align="center"> </el-table-column>
                     <el-table-column prop="category" label="报销类别" align="center"></el-table-column>
                     <el-table-column prop="reason" label="报销事由" align="center"></el-table-column>
@@ -43,12 +45,6 @@
                         <template #default="{ row }">
                             <el-button type="primary" icon="el-icon-edit" circle @click="update(row)"
                                 v-if="row.approvalStatus === '待审核'" :disabled="row.approvalStatus !== '待审核'"></el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column fixed="right" label="流程" align="center">
-                        <template #default="{ row }">
-                            <!-- 在这里使用 row 对象，表示整行的数据 -->
-                            <el-button type="text" size="small" @click="process(row)">审批流程</el-button>
                         </template>
                     </el-table-column>
 
@@ -63,7 +59,7 @@
 
 
             <!-- 修改弹窗区域 -->
-            <el-dialog title="新增报销记录" :visible.sync="show" width="900px">
+            <el-dialog title="修改报销记录" :visible.sync="show" width="900px">
                 <el-card>
                     <div
                         style="font-size: 24px; text-align: center; margin-top: 15px; font-family: STKaiti; font-weight: bold;">
@@ -196,8 +192,9 @@
 
 <script>
 import axios from 'axios';
-import { dataTool } from 'echarts';
 import dayjs from 'dayjs';
+import '@fortawesome/fontawesome-free/css/all.css';
+import { Message } from 'element-ui';
 
 export default {
     data() {
@@ -211,32 +208,37 @@ export default {
             style: '报销类别',
             reason: "报销事由",
             note: "备注",
-            reimbursementID: '',
+            //reimbursementID: '',
             tableHeaderClassName: 'custom-table-header',// 自定义的表头样式类名
             list: [],
-            reimbursementID: '',
+            //reimbursementID: list.reimbursementID,
             userFormData: {
                 date: dayjs().format('YYYY-MM-DD '),
                 amount: '',
                 category: '',
                 reason: '',
-                remarks: ''
+                remarks: '',
+                reimbursementId:''
             },
             pageno: 1,
             pagesize: 4,
             total: 0,
+            //bookId:6,
             params: {
-                assetName: '',
+                category: '',
+
             },
             show: false,
             addshow: false
         }
     },
     created() {
+        this.employeeId=localStorage.getItem('employeeID'),
+        this.bookID = localStorage.getItem('bookID'),
         this.getList()
     },
     methods: {
-
+        //
         process(row) {
             this.isShow = true
             this.DeclarationDate = row.createTime
@@ -244,26 +246,33 @@ export default {
             this.curState = row.approvalStatus
         },
         async getList() {
+            const formattedParams = {
+                ...this.params,
+               };
             const res = await axios({
-                url: "/Reimbursement",
+                url: "http://localhost:8080/reimbursement/findAll",
                 method: "get",
                 params: {
-                    ...this.params,
                     pageno: this.pageno,
                     pagesize: this.pagesize,
-                    employeeID: localStorage.getItem('employeeID')
-                }
+                    bookId:this.bookID,
+                    employeeId:this.employeeID,
+                    ...formattedParams
+                    //employeeID: localStorage.getItem('employeeID')
+                },
             });
-            this.list = res.data.data.list.map(item => {
+             //console.log(res)
+            //返回的数据进行时间格式转换
+            this.list = res.data.data.map(item => {
                 return {
                     ...item,
                     createTime: dayjs(item.createTime).format('YYYY-MM-DD '),
                     updateTime: dayjs(item.updateTime).format('YYYY-MM-DD ')
                 };
             });
-            this.total = res.data.data.total;
+            this.total = res.data.count;
         },
-        // 点击搜索
+        // 点击搜索 分页查询全部
         search() {
             this.getList()
         },
@@ -274,27 +283,35 @@ export default {
             // 重新请求数据
             this.getList()
         },
-
+        //操作里面打开编辑页面的按钮
         update(row) {
             console.log(row)
-
             this.show = true;
             this.userFormData.amount = row.amount;
             this.userFormData.category = row.category;
             this.userFormData.reason = row.reason;
             this.userFormData.remarks = row.remarks;
-            this.reimbursementID = row.reimbursementID
+            this.userFormData.reimbursementId = row.reimbursementId
         },
+        //修改保存按钮
         async submit() {
             const data = {
-                reimbursementID: this.reimbursementID,
-                ...this.userFormData
+                amount:this.userFormData.amount,
+                category:this.userFormData.category,
+                reason:this.userFormData.reason,
+                remarks:this.userFormData.remarks,
+                reimbursementId:this.userFormData.reimbursementId,
+                //reimbursementID: this.reimbursementID,
+                //...this.userFormData,
+                updateTime: new Date(),
             }
+            console.log(data)
             const res = await axios({
-                url: "/updateReimbursement",
+                url: "http://localhost:8080/reimbursement/updateReimbursement",
                 method: "post",
                 data: data
             })
+            this.$message=res.data.msg
             this.getList()
             this.show = false
         },
@@ -302,19 +319,23 @@ export default {
             this.show = false
             this.addshow = false
         },
+        //新增保存按钮
         async addsubmit() {
             const data = {
                 ...this.userFormData,
-                employeeID: localStorage.getItem('employeeID'),
+                createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                employeeId: this.employeeId,
+                bookId: this.bookID
             }
             const res = await axios({
-                url: "/Reimbursement",
+                url: "http://localhost:8080/reimbursement/add",
                 method: "post",
                 data: data
             })
             this.getList()
             this.addshow = false
         },
+        // 点击新增按钮后每次置空
         addopen() {
             this.addshow = true
             this.userFormData.amount = '';

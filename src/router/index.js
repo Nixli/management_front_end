@@ -29,7 +29,7 @@ export const menuRoutes = [
   {
     path: '/home',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '首页', menu: true, icon: 'el-icon-s-platform', role: ['财务', '老板'] },
+    meta: { title: '首页', menu: true, icon: 'el-icon-s-platform', role: ['财务', '管理员'] },
     children: [
       {
         // 等价于取父亲的path
@@ -44,7 +44,7 @@ export const menuRoutes = [
   {
     path: '/voucher',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '凭证管理', menu: true, icon: 'el-icon-postcard', role: ['财务'] },
+    meta: { title: '凭证管理', menu: true, icon: 'el-icon-postcard', role: ['财务', '管理员'] },
     children: [
       {
         // 等价于取父亲的path
@@ -102,13 +102,44 @@ export const menuRoutes = [
       }
     ]
   },
-
+  // 首页
+  {
+    path: '/personal',
+    component: () => import('@/layout/Layout.vue'),
+    meta: { title: '个人中心', menu: true, icon: 'el-icon-user', role: ['财务', '管理员','服务员'] },
+    children: [
+      {
+        // 等价于取父亲的path
+        path: '',
+        meta: { title: '个人中心', menu: true },
+        component: () => import('@/views/personal/Personal.vue')
+      }
+    ]
+  },
+ /* 订单管理 */
+  {
+    path: '/order',
+    component: () => import('@/layout/Layout.vue'),//页面布局已设置不要更改
+    meta: { title: '订单', menu: true, icon: 'el-icon-bank-card', role: ['服务员','管理员'] },
+    children: [
+      {
+        path: '/Order',
+        meta: { title: '下单界面', menu: true },
+        component: () => import('@/views/order/Order'),
+      },
+      {
+        path: '/Order2',
+        meta: { title: '订单管理', menu: true },
+        component: () => import('@/views/order/Order2'),
+      }
+    ]
+  },
   /* 工资管理 */
   //财务端工资管理
   {
     path: '/Salary',
     component: () => import('@/layout/Layout.vue'),//页面布局已设置不要更改
-    meta: { title: '工资管理', menu: true, icon: 'el-icon-bank-card', role: ['财务'] },
+    meta: { title: '工资管理', menu: true, icon: 'el-icon-bank-card', role: ['财务', '管理员'] },
     children: [
       {
         path: '',
@@ -138,7 +169,7 @@ export const menuRoutes = [
   {
     path: '/financeReimbursement',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '报销管理', menu: true, icon: 'el-icon-coin', role: ['财务'] },
+    meta: { title: '报销管理', menu: true, icon: 'el-icon-coin', role: ['财务', '管理员'] },
     children: [
       {
         path: '',
@@ -165,7 +196,7 @@ export const menuRoutes = [
   {
     path: '/bossReimbursement',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '报销审核', menu: true, icon: 'el-icon-bank-card', role: ['老板'] },
+    meta: { title: '报销审核', menu: true, icon: 'el-icon-bank-card', role: ['管理员'] },
     children: [
       {
         path: '',
@@ -180,7 +211,7 @@ export const menuRoutes = [
   {
     path: '/FinanceDepreciation',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '固定资产折旧管理', menu: true, icon: 'el-icon-office-building', role: ['财务'] },
+    meta: { title: '固定资产折旧管理', menu: true, icon: 'el-icon-office-building', role: ['财务', '管理员'] },
     children: [
       {
         path: '',
@@ -206,7 +237,7 @@ export const menuRoutes = [
   {
     path: '/BossFixedasset',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '固定资产折旧审核', menu: true, icon: 'el-icon-office-building', role: ['老板'] },
+    meta: { title: '固定资产折旧审核', menu: true, icon: 'el-icon-office-building', role: ['管理员'] },
     children: [
       {
         path: '',
@@ -220,7 +251,7 @@ export const menuRoutes = [
   {
     path: '/carryover',
     component: () => import('@/layout/Layout.vue'),
-    meta: { title: '期末结转', menu: true, icon: 'el-icon-s-marketing', role: ['财务'] },
+    meta: { title: '期末结转', menu: true, icon: 'el-icon-s-marketing', role: ['财务', '管理员'] },
     children: [
       {
         path: '',

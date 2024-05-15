@@ -7,11 +7,12 @@
             <el-card>
                 <div>
                     <!-- 右侧部分，包括查询输入框 -->
-                    <el-input placeholder="请输入查询内容" prefix-icon="el-icon-search" v-model="params.assetName"
+                    <el-input placeholder="请输入查询内容" prefix-icon="el-icon-search" v-model="params.category"
                         style="width: 300px;"></el-input>
                     <el-button type="primary" @click="search">查询</el-button>
                 </div>
                 <el-table :data="list" style="width: 100%;margin-top: 15px;" :header-row-class-name="tableHeaderClassName">
+                    <el-table-column prop="reimbursementId" label="编号" align="center"> </el-table-column>
                     <el-table-column prop="amount" label="报销金额" align="center"> </el-table-column>
                     <el-table-column prop="category" label="报销类别" align="center"></el-table-column>
                     <el-table-column prop="reason" label="报销事由" align="center"></el-table-column>
@@ -20,7 +21,7 @@
                     <el-table-column prop="approvalStatus" label="报销状态" align="center"></el-table-column>
                     <el-table-column fixed="right" label="生成凭证" align="center">
                         <template #default="{ row }">
-                            <el-button v-if="row.approvalStatus === '已通过' && row.isToVoucher === '否'" type="text"
+                            <el-button v-if="row.approvalStatus === '待审核' && row.isToVoucher === '否'" type="text"
                                 size="medium" icon="el-icon-document" @click="updateApprovalStatus(row)">生成凭证</el-button>
                         </template>
                     </el-table-column>
@@ -54,7 +55,7 @@ export default {
             style: '报销类别',
             reason: "报销事由",
             note: "备注",
-            reimbursementID: '',
+            //reimbursementID: '',
             tableHeaderClassName: 'custom-table-header',// 自定义的表头样式类名
             list: [],
             userFormData: {
@@ -64,16 +65,18 @@ export default {
                 reason: '',
                 remarks: ''
             },
-            params: {
-                assetName: ''
-            },
             pageno: 1,
             pagesize: 4,
             total: 0,
-            bookID: localStorage.getItem('bookID')
+            params: {
+                category: '',
+                bookId: localStorage.getItem('bookID')
+            },
+            //bookID: localStorage.getItem('bookID')
         }
     },
     created() {
+        //this.bookID = localStorage.getItem('bookID'),
         this.getList()
     },
     methods: {
@@ -83,7 +86,7 @@ export default {
                 isToVoucher: "是"
             }
             const res = await axios({
-                url: "/updateReimbursement",
+                url: "http://localhost:8080/reimbursement/updateReimbursementToVarch",
                 method: "post",
                 data: data
             })
@@ -101,21 +104,22 @@ export default {
 
         async getList() {
             const res = await axios({
-                url: "/xxmanagerReimbursement",
+                url: "http://localhost:8080/reimbursement/findAll",
                 method: "get",
                 params: {
-                    bookID: this.bookID,
+                    ...this.params,
                     pageno: this.pageno,
                     pagesize: this.pagesize,
                 }
             });
-            this.list = res.data.data.list.map(item => {
+            this.list = res.data.data.map(item => {
                 return {
                     ...item,
                     createTime: dayjs(item.createTime).format('YYYY-MM-DD '),
+                    updateTime: dayjs(item.updateTime).format('YYYY-MM-DD ')
                 };
             });
-            this.total = res.data.data.total;
+            this.total = res.data.count;
         },
         // 点击搜索
         search() {
