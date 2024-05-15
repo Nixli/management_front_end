@@ -138,7 +138,7 @@ export default {
 
     async getCollectionDataList() {
       const res = await axios({
-        url: '/voucher',
+        url: 'http://localhost:8080/voucher/voucher',
         method: 'get',
         params: {
           pageno: this.pageno,
@@ -149,7 +149,7 @@ export default {
       });
 
       // 获取数据
-      const data = res.data.data.list;
+      const data = res.data.data;
 
       // 计算每个月份的总金额
       const payData = {};
@@ -172,7 +172,7 @@ export default {
 
     async getPayDataList() {
       const res = await axios({
-        url: '/voucher',
+        url: 'http://localhost:8080/voucher/voucher',
         method: 'get',
         params: {
           pageno: this.pageno,
@@ -183,7 +183,7 @@ export default {
       });
 
       // 获取数据
-      const data = res.data.data.list;
+      const data = res.data.data;
 
       // 计算每个月份的总金额
       const payData = {};
@@ -208,7 +208,7 @@ export default {
     async getPaymentList() {
       const currentYearMonth = dayjs().format('YYYY-MM');
       const res = await axios({
-        url: '/voucher',
+        url: 'http://localhost:8080/voucher/voucher',
         method: 'get',
         params: {
           pageno: this.pageno,
@@ -218,7 +218,7 @@ export default {
         }
       });
       // 处理数据：将 cime 格式化为 'YYYY-MM' 的形式
-      this.paymentList = res.data.data.list.map(item => ({
+      this.paymentList = res.data.data.map(item => ({
         ...item,
         cime: dayjs(item.cime).format('YYYY-MM')
       }));
@@ -243,7 +243,7 @@ export default {
     async getCollectionList() {
       const currentYearMonth = dayjs().format('YYYY-MM');
       const res = await axios({
-        url: '/voucher',
+        url: 'http://localhost:8080/voucher/voucher',
         method: 'get',
         params: {
           pageno: this.pageno,
@@ -252,7 +252,7 @@ export default {
           bookID: localStorage.getItem('bookID')
         }
       })
-      this.collectionList = res.data.data.list.map(item => ({
+      this.collectionList = res.data.data.map(item => ({
         ...item,
         cime: dayjs(item.cime).format('YYYY-MM')
       }));
