@@ -266,7 +266,7 @@ export default {
         },
         async getSummaryList() {
             const res = await axios({
-                url: "/summary",
+                url: "http://172.16.110.32:8080/summary/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -278,7 +278,7 @@ export default {
         },
         async getaccountingAccountList() {
             const res = await axios({
-                url: "/accountingAccount",
+                url: "http://172.16.110.32:8080/accountingAccount/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -290,25 +290,25 @@ export default {
         },
         async getVoucherWordList() {
             const res = await axios({
-                url: "/VoucherWord",
+                url: "http://172.16.110.32:8080/voucherWord/findAll",
                 method: "get",
             });
             this.voucherWordlist = res.data.data
         },
         async getVoucher() {
             const data = {
-                accountBook: localStorage.getItem('bookID'),// 使用关系属性名
+                bookID: localStorage.getItem('bookID'),// 使用关系属性名
                 voucherID: localStorage.getItem('voucherID')
             };
             const res = await axios({
-                url: '/voucher',
+                url: 'http://localhost:8080/voucher/voucher',
                 method: 'get',
                 params: data,
             });
             console.log(res.data.data, '---------------')
-            this.VoucherList = res.data.data.list.map(item => {
+            this.VoucherList = res.data.data.map(item => {
 
-                const tableData = item.voucherContents.filter(item => item.summary).map(content => {
+                const tableData = item.voucherContent.filter(item => item.summary).map(content => {
                     
                     // 将 debitAmount 转换为字符串数组
                     const debitAmountArr = this.formatNum(this.moneyToArr(Number(content.debitAmount)));

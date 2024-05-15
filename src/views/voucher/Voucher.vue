@@ -77,7 +77,7 @@
                                 <el-option v-for="accountingAccount in accountingAccountList"
                                     :label="accountingAccount.accountingAccount"
                                     :value="accountingAccount.accountingAccount"
-                                    :key="accountingAccount.accountingAccount" />
+                                    :key="accountingAccount.acountingAccount" />
                             </el-select>
                         </td>
                         <td>
@@ -321,24 +321,25 @@ export default {
             
             if (this.arrToMoney(this.tableData[0].debitAmount) == this.arrToMoney(this.tableData[1].creditAmount)) {
                 const data = {
-                name: this.name,
+                maker: this.name,
                 date: dayjs(this.date).format('YYYY-MM-DD'),
                 voucherWord: this.voucherWord,
                 bookID: localStorage.getItem('bookID'),
                 totalAmount: this.finaltotal,
                 voucherNumber: this.no,
-                tableData: this.tableData.map(item => ({
+                cime:new Date(),
+                voucherContent: this.tableData.map(item => ({
                     ...item,
                     debitAmount: this.arrToMoney(item.debitAmount),
                     creditAmount: this.arrToMoney(item.creditAmount),
                 })),
             };
             const res = await axios({
-                url: '/addVoucher',
+                url: 'http://172.16.110.32:8080/voucher/addVoucher',
                 method: 'post',
                 data: data
             })
-            if (res.data.code == 1) {
+            if (res.code == 200) {
                 Message.success('新增成功,即将进入凭证列表')
                 setTimeout(() => {
                     // 跳转页面

@@ -5,14 +5,14 @@
                 <el-card>
                     <div><span>{{ item.voucherWord }}</span> - <span>{{ item.voucherNumber }}</span></div>
 
-                    <el-table :data="item.voucherContents" style="margin-top: 15px;">
+                    <el-table :data="item.voucherContent" style="margin-top: 15px;">
                         <el-table-column label="摘要" prop="summary">
                         </el-table-column>
                         <el-table-column label="会计科目" prop="accountingSubject"></el-table-column>
                         <el-table-column label="借方金额" prop="debitAmount"></el-table-column>
                         <el-table-column label="贷方金额" prop="creditAmount"></el-table-column>
                         <el-table-column label="操作">
-                            <template #default="{row}">
+                            <template #default="{ row }">
                                 <el-button type="text" size="small" @click="cheak(item)">查看</el-button>
                             </template>
                         </el-table-column>
@@ -22,8 +22,8 @@
 
             <!-- 分页 -->
             <el-pagination @current-change="pagechange" background layout="prev, pager, next" :total="total"
-                    :page-size="pagesize" style="text-align: center; margin-top: 10px;">
-                </el-pagination>
+                :page-size="pagesize" style="text-align: center; margin-top: 10px;">
+            </el-pagination>
         </div>
     </el-card>
 </template>
@@ -36,36 +36,36 @@ export default {
         return {
             list: [],
             pageno: 1,
-            pagesize: 3,
+            pagesize: 2,
             total: 0,
         }
     },
     created() {
         this.list = this.list.filter(item => {
-            item.voucherContents = item.voucherContents.filter(item => item.summary)
-            return item.voucherContents.length > 0
+            item.voucherContent = item.voucherContent.filter(item => item.summary)
+            return item.voucherContent.length > 0
         })
         this.getlist();
     },
-    methods:{
-        cheak(row){
+    methods: {
+        cheak(row) {
             localStorage.setItem('voucherID', row.voucherID)
             this.$router.push('/voucher/CheckVoucher');
         },
-         async getlist(){
+        async getlist() {
             const res = await axios({
-                url: '/voucher',
+                url: 'http://localhost:8080/voucher/voucher',
                 method: 'get',
-                params:{
+                params: {
                     pageno: this.pageno,
                     pagesize: this.pagesize,
-                    bookID:localStorage.getItem('bookID')
+                    bookID: localStorage.getItem('bookID')
                 }
             })
-            this.list = res.data.data.list;
-            this.total = res.data.data.total;
-         },
-         pagechange(pageno) {
+            this.list = res.data.data;
+            this.total = res.data.count;
+        },
+        pagechange(pageno) {
             console.log('00000000')
             // 条件改变
             this.pageno = pageno
