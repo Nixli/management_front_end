@@ -55,7 +55,6 @@ export default {
       collection: 0,
       currentTime: '',
       myChart: {},
-      // 
       series: [],
       payData: [],
       collectionData: [],

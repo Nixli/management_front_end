@@ -45,7 +45,7 @@
             </el-card>
 
             <el-table :data="list" border style="width: 100%">
-                <el-table-column prop="employee.name" label="姓名" width="70" align="center"
+                <el-table-column prop="employee.employeeDes" label="姓名" width="70" align="center"
                     fixed="left"></el-table-column>
                 <el-table-column prop="baseSalary" label="基本工资" align="center"> </el-table-column>
                 <el-table-column prop="allowance" label="津贴" align="center"> </el-table-column>
@@ -64,12 +64,6 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column fixed="right" label="操作" align="center">
-                    <template #default="{ row }">
-                        <el-button type="text" icon="el-icon-delete-solid" size="medium"
-                            @click="deleteSalary(row.salaryID)">删除</el-button>
-                    </template>
-                </el-table-column>
                 <el-table-column fixed="right" label="生成凭证" align="center">
                     <template #default="{ row }">
                         <el-button v-if="row.isToVoucher === '否'" type="text" size="medium" icon="el-icon-document"
@@ -95,7 +89,7 @@
                 <el-form-item label="员工姓名">
                     <el-select v-model="selectedEmployee" placeholder="选择员工" clearable :disabled="actionType === 'edit'"
                         size="medium">
-                        <el-option :label="employee.name" :value="employee.employeeID" :key="employee.employeeID"
+                        <el-option :label="employee.employeeDes" :value="employee.employeeID" :key="employee.employeeID"
                             v-for="employee in employeeList" />
                     </el-select>
                 </el-form-item>
@@ -191,7 +185,8 @@ export default {
             // 搜索条件
             params: {
                 assetName: dayjs().subtract(1, 'year').format('YYYY-MM-DD HH:mm:ss'),
-                brandModel: dayjs().format('YYYY-MM-DD HH:mm:ss')
+                brandModel: dayjs().add(1, 'month').format('YYYY-MM-DD HH:mm:ss')
+
             },
             userFormData: {
 
@@ -221,12 +216,13 @@ export default {
     methods: {
 
         async updateApprovalStatus(row) {
+            console.log(row)
             const data = {
-                salaryID: row.salaryID,
+                salaryId: row.salaryId,
                 isToVoucher: "是"
             }
             const res = await axios({
-                url: "/salary",
+                url: "http://localhost:8080/salary/update",
                 method: "post",
                 data: data
             })
@@ -250,7 +246,7 @@ export default {
             };
             const res = await axios({
                 method: "get",
-                url: "http://localhost:8080/salary/findAll",
+                url: "http://localhost:8080/salary/findAllAndEmployee",
                 params: {
                     pageno: this.pageno,
                     pagesize: this.pagesize,
@@ -278,13 +274,13 @@ export default {
             this.total = res.data.count;
 
             const employeeListRes = await axios({
-                url: "http://localhost:8080/employee/findAllEmployee",
+                url: "http://localhost:8080/employee/queryAllEmployeeInformationByBookID",
                 method: "get",
                 params: {
                     bookID: this.bookID
                 }
             })
-            this.employeeList = employeeListRes.data.data.list
+            this.employeeList = employeeListRes.data.data
         },
         // 点击搜索
         search() {
@@ -380,13 +376,17 @@ export default {
         async submit() {
             const data = {
                 ...this.userFormData,
+                isToVoucher:'否',
+                bookID:this.bookID,
+                payoutDate:new Date(),
+                createDate:new Date(),
             }
-            data.employee = { employeeID: this.selectedEmployee };
+            data.employee = this.selectedEmployee ;
             if (this.actionType === 'edit') {
                 data.salaryID = this.salaryID
             }
             const res = await axios({
-                url: '/salary',
+                url: 'http://localhost:8080/salary/insert',
                 method: 'post',
                 data: data
             })

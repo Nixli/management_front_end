@@ -75,9 +75,9 @@
                         <td>
                             <el-select class="custom-select" v-model="item.accountingSubject" placeholder="">
                                 <el-option v-for="accountingAccount in accountingAccountList"
-                                    :label="accountingAccount.AccountingAccount"
-                                    :value="accountingAccount.AccountingAccount"
-                                    :key="accountingAccount.AccountingAccount" />
+                                    :label="accountingAccount.accountingAccount"
+                                    :value="accountingAccount.accountingAccount"
+                                    :key="accountingAccount.accountingAccount" />
                             </el-select>
                         </td>
                         <td>
@@ -285,7 +285,7 @@ export default {
         },
         async getSummaryList() {
             const res = await axios({
-                url: "/summary",
+                url: "http://172.16.110.32:8080/summary/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -293,11 +293,11 @@ export default {
                     pagesize: this.pagesize,
                 }
             });
-            this.summarylist = res.data.data.list;
+            this.summarylist = res.data.data;
         },
         async getaccountingAccountList() {
             const res = await axios({
-                url: "/accountingAccount",
+                url: "http://172.16.110.32:8080/accountingAccount/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -305,11 +305,11 @@ export default {
                     pagesize: this.pagesize,
                 }
             });
-            this.accountingAccountList = res.data.data.list;
+            this.accountingAccountList = res.data.data;
         },
         async getVoucherWordList() {
             const res = await axios({
-                url: "/VoucherWord",
+                url: "http://172.16.110.32:8080/voucherWord/findAll",
                 method: "get",
             });
             this.voucherWordlist = res.data.data

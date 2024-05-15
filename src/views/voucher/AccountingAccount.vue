@@ -34,7 +34,7 @@
                 </div>
                 <el-table :data="list" style="width: 100%;margin-top: 15px;" :header-row-class-name="tableHeaderClassName">
                     <el-table-column prop="id" label="序号" align="center" width="100"> </el-table-column>
-                    <el-table-column prop="AccountingAccount" label="会计科目" align="center"></el-table-column>
+                    <el-table-column prop="accountingAccount" label="会计科目" align="center"></el-table-column>
                     <el-table-column fixed="right" label="操作" align="center" width="200px">
                         <template #default="{ row }">
                             <el-button type="primary" icon="el-icon-edit" circle @click="update(row)"></el-button>
@@ -116,7 +116,7 @@ export default {
     methods: {
         async getList() {
             const res = await axios({
-                url: "/accountingAccount",
+                url: "http://172.16.110.32:8080/accountingAccount/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -124,8 +124,8 @@ export default {
                     pagesize: this.pagesize,
                 }
             });
-            this.list = res.data.data.list;
-            this.total = res.data.data.total;
+            this.list = res.data.data;
+            this.total = res.data.count;
         },
         // 点击搜索
         search() {
@@ -154,7 +154,7 @@ export default {
                     id: row.id,
                 }
                 const res = await axios({
-                    url: "/deleteAccountingAccount",
+                    url: "http://172.16.110.32:8080/accountingAccount/delete",
                     method: "post",
                     data: data
                 })
@@ -168,7 +168,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "/accountingAccount",
+                url: "http://172.16.110.32:8080/accountingAccount/update",
                 method: "post",
                 data: data
             })
@@ -184,7 +184,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "/accountingAccount",
+                url: "http://172.16.110.32:8080/accountingAccount/add",
                 method: "post",
                 data: data
             })
