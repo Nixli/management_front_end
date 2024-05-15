@@ -7,17 +7,19 @@
             <el-card>
                 <div>
                     <!-- 右侧部分，包括查询输入框 -->
-                    <el-input placeholder="请输入查询内容" prefix-icon="el-icon-search" v-model="params.assetName"
+                    <el-input placeholder="请输入查询内容" prefix-icon="el-icon-search" v-model="params.category"
                         style="width: 300px;"></el-input>
                     <el-button type="primary" @click="search">查询</el-button>
                 </div>
                 <el-table :data="list" style="width: 100%;margin-top: 15px;" :header-row-class-name="tableHeaderClassName">
+                    <el-table-column prop="reimbursementId" label="编号" align="center"> </el-table-column>
                     <el-table-column prop="amount" label="报销金额" align="center"> </el-table-column>
                     <el-table-column prop="category" label="报销类别" align="center"></el-table-column>
                     <el-table-column prop="reason" label="报销事由" align="center"></el-table-column>
+                    <el-table-column prop="approvalStatus" label="审核状态" align="center"></el-table-column>
+                    <el-table-column prop="approver" label="审核人" align="center"></el-table-column>
                     <el-table-column prop="remarks" label="备注" align="center"></el-table-column>
                     <el-table-column prop="createTime" label="申请时间" align="center"></el-table-column>
-                    <el-table-column prop="approvalStatus" label="报销状态" align="center"></el-table-column>
                     <el-table-column fixed="right" label="操作" align="center" width="200px">
                         <template #default="{ row }">
                             <el-button  :disabled="row.approvalStatus !== '待审核'" type="primary" icon="el-icon-check" circle @click="accept(row)"></el-button>
@@ -58,12 +60,13 @@ export default {
                 reason: '',
                 remarks: ''
             },
-            params: {
-                assetName: ''
-            },
             pageno: 1,
             pagesize: 4,
             total: 0,
+            params: {
+                category: '',
+                bookId: localStorage.getItem('bookID')
+            },
             bookID: localStorage.getItem('bookID')
         }
     },
@@ -75,10 +78,11 @@ export default {
         async accept(row) {
             const data = {
                 reimbursementID: row.reimbursementID,
+                name:this.name,
                 approvalStatus:'已通过'
             }
             const res = await axios({
-                url: '/updateReimbursement',
+                url: 'http://localhost:8080/updateApproval',
                 method: "post",
                 data: data
             })
@@ -87,10 +91,11 @@ export default {
         async reject(row) {
             const data = {
                 reimbursementID: row.reimbursementID,
+                name:this.name,
                 approvalStatus:'未通过'
             }
             const res = await axios({
-                url: '/updateReimbursement',
+                url: 'http://localhost:8080/updateApproval',
                 method: "post",
                 data: data
             })
@@ -99,21 +104,21 @@ export default {
 
         async getList() {
             const res = await axios({
-                url: "/managerReimbursement",
+                url: "http://localhost:8080/reimbursement/findAll",
                 method: "get",
                 params: {
-                    bookID: this.bookID,
+                    ...this.params,
                     pageno: this.pageno,
                     pagesize: this.pagesize,
                 }
             });
-            this.list = res.data.data.list.map(item => {
+            this.list = res.data.data.map(item => {
                 return {
                     ...item,
                     createTime: dayjs(item.createTime).format('YYYY-MM-DD '),
                 };
             });
-            this.total = res.data.data.total;
+            this.total = res.data.count;
         },
         // 点击搜索
         search() {
