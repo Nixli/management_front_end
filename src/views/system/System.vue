@@ -69,7 +69,10 @@
         </el-form-item>
 
         <el-form-item label="性别">
-          <el-input v-model="userFormData.sex" placeholder="性别"></el-input>
+                <template>
+                    <el-radio v-model="userFormData.sex" label="男">男</el-radio>
+                    <el-radio v-model="userFormData.sex" label="女">女</el-radio>
+                </template>
         </el-form-item>
 
         <el-form-item label="角色">

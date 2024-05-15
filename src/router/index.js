@@ -102,6 +102,20 @@ export const menuRoutes = [
       }
     ]
   },
+  // 首页
+  {
+    path: '/personal',
+    component: () => import('@/layout/Layout.vue'),
+    meta: { title: '个人中心', menu: true, icon: 'el-icon-user', role: ['财务', '管理员','服务员'] },
+    children: [
+      {
+        // 等价于取父亲的path
+        path: '',
+        meta: { title: '个人中心', menu: true },
+        component: () => import('@/views/personal/Personal.vue')
+      }
+    ]
+  },
  /* 订单管理 */
   {
     path: '/order',
