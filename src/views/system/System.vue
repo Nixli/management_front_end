@@ -7,10 +7,13 @@
         <!-- 搜索区域 -->
         <el-form :inline="true">
           <el-form-item label="员工姓名">
-            <el-input v-model="params.name" placeholder="请输入员工姓名"></el-input>
+            <el-input v-model="params.employeeDes" placeholder="请输入员工姓名"></el-input>
           </el-form-item>
-          <el-form-item label="员工职位">
-            <el-input v-model="params.position" placeholder="请输入员工职位"></el-input>
+          <el-form-item label="员工手机号">
+            <el-input v-model="params.phone" placeholder="请输入员工手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="员工邮箱">
+            <el-input v-model="params.email" placeholder="请输入员工邮箱"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="search" type="primary" icon="el-icon-search">搜索</el-button>
@@ -28,21 +31,24 @@
       </el-card>
 
       <el-table :data="list" border style="width: 100%">
-        <el-table-column prop="name" label="员工姓名" align="center"> </el-table-column>
-        <el-table-column prop="age" label="员工年龄" align="center"> </el-table-column>
+        <el-table-column prop="employeeDes" label="员工姓名" align="center"> </el-table-column>
         <el-table-column prop="sex" label="员工性别" align="center"> </el-table-column>
-        <el-table-column prop="position" label="员工职位" align="center"> </el-table-column>
-        <el-table-column prop="department" label="员工所属部门" align="center"> </el-table-column>
-        <el-table-column prop="hireDate" label="员工入职日期" align="center"> </el-table-column>
-        <el-table-column prop="isResign" label="状态" align="center">
-          <template #default="{ row }">
+        <el-table-column prop="phone" label="手机号" align="center"> </el-table-column>
+        <el-table-column prop="email" label="邮箱" align="center"> </el-table-column>
+        <el-table-column prop="bankcardID" label="银行卡号" align="center"> </el-table-column>
+        <el-table-column prop="password" label="密码" align="center"> </el-table-column>
+        <el-table-column prop="roleName" label="角色" align="center"> </el-table-column>
+        <el-table-column prop="storeName" label="门店" align="center"> </el-table-column>
+        <el-table-column prop="createTime" label="员工入职日期" align="center"> </el-table-column>
+        <el-table-column prop="endTime" label="员工离职日期" align="center"> </el-table-column>
+        <el-table-column prop="state" label="状态" align="center">
+          <!-- <template #default="{ row }">
             {{ row.isResign ? '离职' : '在职' }}
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="{ row }">
-            <el-button :disabled="!row.isResign" type="text" size="small"
-              @click="removeFixedasset(row.employeeID)">删除</el-button>
+            <el-button v-if="row.state!='在职'" type="text" size="small" @click="removeEmployee(row.employeeID)">删除</el-button>
             <el-button type="text" size="small" @click="edit(row)">修改</el-button>
           </template>
         </el-table-column>
@@ -56,26 +62,57 @@
 
     <!-- 弹窗区域 -->
     <el-dialog :title="actionType == 'add' ? '新增员工信息' : '修改员工信息'" :visible.sync="dialogFormVisible">
-      <el-form :model="userFormData" class="demo-form-inline" label-width="120px">
+      <el-form :model="userFormData" class="demo-ruleForm" label-width="80px" status-icon :rules="rules">
 
         <el-form-item label="员工姓名">
-          <el-input v-model="userFormData.name" placeholder="员工姓名"></el-input>
-        </el-form-item>
-
-        <el-form-item label="年龄">
-          <el-input v-model="userFormData.age" placeholder="年龄"></el-input>
+          <el-input v-model="userFormData.employeeDes" placeholder="员工姓名"></el-input>
         </el-form-item>
 
         <el-form-item label="性别">
           <el-input v-model="userFormData.sex" placeholder="性别"></el-input>
         </el-form-item>
 
-        <el-form-item label="员工职位">
-          <el-input v-model="userFormData.position" placeholder="员工职位"></el-input>
+        <el-form-item label="角色">
+          <el-select v-model="selectedRole" placeholder="选择角色" size="medium" @change="getRoleId">
+            <el-option :label="role.roleName" :value="role.roleName" :key="role.roleID" v-for="role in roleList" />
+          </el-select>
         </el-form-item>
 
-        <el-form-item label="所属部门">
-          <el-input v-model="userFormData.department" placeholder="所属部门"></el-input>
+        <el-form-item label="门店">
+          <el-select v-model="selectedStore" placeholder="选择门店" size="medium" @change="getStoreId">
+            <el-option :label="store.storeName" :value="store.storeName" :key="store.storeId"
+              v-for="store in storeList" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="密码" prop="pass">
+          <el-input type="password" v-model="userFormData.password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input type="password" v-model="userFormData.checkPass" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item prop="phone" label="手机号" :rules="[
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号', trigger: ['blur', 'change'] }
+        ]">
+          <el-input v-model="userFormData.phone"></el-input>
+        </el-form-item>
+
+        <el-form-item prop="email" label="邮箱" :rules="[
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ]">
+          <el-input v-model="userFormData.email"></el-input>
+        </el-form-item>
+
+        <el-form-item label="银行卡号">
+          <el-input v-model="userFormData.bankcardID" placeholder="银行卡号"></el-input>
+        </el-form-item>
+
+        <el-form-item label="入职时间">
+          <el-date-picker v-model="userFormData.createTime" type="datetime" placeholder="选择日期时间">
+          </el-date-picker>
         </el-form-item>
 
         <el-switch v-model="userFormData.isResign" active-text="离职" inactive-text="在职" style="margin-left: 50px;">
@@ -97,6 +134,26 @@ import axios from "axios";
 export default {
 
   data() {
+    //密码校验
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.userFormData.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.userFormData.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       list: [],
       // 分页相关
@@ -105,47 +162,100 @@ export default {
       total: 0,
       // 搜索条件
       params: {
-        name: '',
-        position: ''
+        employeeDes: '',
+        phone: '',
+        email: '',
       },
       // 控制弹框的显示与隐藏
       dialogFormVisible: false,
-      // 新增表单的数据
+      // 表单的数据
       userFormData: {
-        name: '',
-        age: '',
+        employeeID: '',
+        employeeDes: '',
         sex: '',
-        position: '',
-        department: '',
-        isResign:false,
+        roleName: '',
+        storeName: '',
+        password: '',
+        checkPass: '',
+        phone: '',
+        email: '',
+        bankcardID: '',
+        createTime: '',
+        state: '',
+        isResign: '',
         accountBook: { bookID: localStorage.getItem('bookID') } // 使用关系属性名
+      },
+      //密码校验规则
+      rules: {
+        password: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        checkPass: [
+          { validator: validatePass2, trigger: 'blur' }
+        ]
       },
       // add： 新增   edit: '更新'
       actionType: '',
       id: '',
-      bookID: localStorage.getItem('bookID')
+      bookID: localStorage.getItem('bookID'),
+      //角色(新增/修改区域)
+      roleList: [],
+      selectedRole: '',
+      //门店(新增/修改区域)
+      storeList: [],
+      selectedStore: ''
     };
   },
   created() {
     this.getList()
+    this.getRole()
+    this.getStore()
   },
 
   methods: {
     async getList() {
       const res = await axios({
         method: "get",
-        url: "/employee",
+        url: "http://localhost:8080/employee/findAllEmployee",
         params: {
           pageno: this.pageno,
           pagesize: this.pagesize,
-          bookID: this.bookID,
           ...this.params
         },
       });
-      this.list = res.data.data.list;
-      this.total = res.data.data.total;
+      this.list = res.data.data;
+      this.total = res.data.count;
     },
-
+    async getRole() {
+      const resRole = await axios({
+        method: "get",
+        url: "http://localhost:8080/role/findAll",
+      });
+      this.roleList = resRole.data.data;
+    },
+    async getStore() {
+      const resStore = await axios({
+        method: "get",
+        url: "http://localhost:8080/store/findAll",
+      });
+      this.storeList = resStore.data.data;
+    },
+    // role监听器：根据角色名称获取角色ID
+    getRoleId() {
+      const selectedRoleObj = this.roleList.find(role => role.roleName === this.selectedRole);
+      if (selectedRoleObj) {
+        this.userFormData.roleID = selectedRoleObj.roleID;
+      }
+      console.log(this.userFormData.roleID)
+    },
+    // store监听器：根据门店名称获取门店ID
+    getStoreId() {
+      const selectedStoreObj = this.storeList.find(store => store.storeName === this.selectedStore);
+      if (selectedStoreObj) {
+        this.userFormData.storeID = selectedStoreObj.storeId;
+      }
+      console.log(this.userFormData.storeID)
+    },
     // 点击搜索
     search() {
       this.getList()
@@ -167,14 +277,23 @@ export default {
       this.actionType = 'add'
       // 重置userFormData
       this.userFormData = {
-        name: '',
-        age: '',
+        employeeID: '',
+        employeeDes: '',
         sex: '',
-        position: '',
-        department: '',
-        isResign:false,
+        roleID: '',
+        storeID: '',
+        password: '',
+        phone: '',
+        email: '',
+        bankcardID: '',
+        createTime: '',
+        endTime: '',
+        state: '',
+        isResign: false,
         accountBook: { bookID: localStorage.getItem('bookID') } // 使用关系属性名
-      }
+      };
+      console.log(this.userFormData.roleID)
+      console.log(this.userFormData.storeID)
     },
 
     //修改弹窗
@@ -182,39 +301,75 @@ export default {
       // 打开弹窗
       this.dialogFormVisible = true
       // 数据回显
-      this.userFormData.name = row.name
-      this.userFormData.age = row.age
+      this.userFormData.employeeID = row.employeeID
+      this.userFormData.employeeDes = row.employeeDes
       this.userFormData.sex = row.sex
-      this.userFormData.position = row.position
-      this.userFormData.department = row.department
+      this.userFormData.roleID = row.roleID
+      this.userFormData.storeID = row.storeID
+      this.userFormData.password = row.password
+      this.userFormData.phone = row.phone
+      this.userFormData.email = row.email
+      this.userFormData.bankcardID = row.bankcardID
+      this.userFormData.createTime = row.createTime
+      this.userFormData.endTime = row.endTime
+      this.userFormData.state = row.state
       // 记录id
-      this.id = row.employeeID
-      this.userFormData.isResign = row.isResign
+      this.employeeID = row.employeeID
+      this.userFormData.isResign = ""
       // 记录动作
       this.actionType = 'edit'
     },
 
     //新增或修改固定资产
-    async submit(id) {
+    async submit() {
       // 拷贝userFormData到data
       const data = { ...this.userFormData }
       // 修改的时候需要把id带过去
       if (this.actionType === 'edit') {
-        data.employeeID = this.id
+        data.employeeID = this.employeeID
+        if(data.state === '离职') {
+          data.endTime = new Date()
+        }
+        const res = await axios({
+          url: 'http://localhost:8080/employee/updateEmployee',
+          method: 'post',
+          data: data
+        })
+        console.log(res.data.code)
+        if (res.data.code === 200) {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          });
+        } else {
+          this.$message.error('修改失败');
+        }
+        this.dialogFormVisible = false
+        this.getList()
+      } else {
+        const res = await axios({
+          url: 'http://localhost:8080/employee/insertEmployee',
+          method: 'post',
+          data: data
+        })
+        console.log(res.data.code)
+        if (res.data.code === 200) {
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          });
+        } else {
+          this.$message.error('添加失败');
+        }
+        this.dialogFormVisible = false
+        this.getList()
       }
-      const res = await axios({
-        url: '/employee',
-        method: 'post',
-        data: data
-      })
-      this.dialogFormVisible = false
-      this.getList()
     },
     //删除固定资产
-    async removeFixedasset(id) {
+    async removeEmployee(id) {
 
       const res = await axios({
-        url: '/removeEmployee',
+        url: 'http://localhost:8080/employee/deleteEmployee',
         method: 'post',
         // data一定是个对象，不能直接把id给data，把id变成一个对象给到data
         data: {

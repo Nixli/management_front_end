@@ -90,21 +90,22 @@ export default {
         if (LoginResult.data.data.roleName == '财务') {
           localStorage.setItem('name',LoginResult.data.data.employeeID)
           // 等待两秒后跳转页面
-          Message.success('即将进入账套界面')
+          Message.success('即将进入门店界面')
           setTimeout(() => {
             // 跳转页面
             this.$router.push('/Store');
           }, 2000);
         }else if (LoginResult.data.data.roleName == '老板') {
-          Message.success('即将进入账套界面')
+          Message.success('即将进入门店界面')
           setTimeout(() => {
             // 跳转页面
             this.$router.push('/financeAccountBooks');
           }, 2000);
         }else {
-          localStorage.setItem('bookID', LoginResult.data.data.accountBook.bookID)
-          localStorage.setItem('bookName', LoginResult.data.data.accountBook.bookName)
-          localStorage.setItem('name',LoginResult.data.data.name)
+          // localStorage.setItem('bookID', LoginResult.data.data.accountBook.bookID)
+          // localStorage.setItem('bookName', LoginResult.data.data.accountBook.bookName)
+          // localStorage.setItem('name',LoginResult.data.data.name)
+          localStorage.setItem('name',LoginResult.data.data.employeeID)
           Message.success('即将进入员工主界面')
           setTimeout(() => {
             // 跳转页面
@@ -112,7 +113,7 @@ export default {
           }, 2000);
         }
       } else {
-        Message.error('登录失败')
+        Message.error('手机号/邮箱或密码错误')
       }
     }
   }
