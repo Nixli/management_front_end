@@ -184,8 +184,8 @@ export default {
             total: 0,
             // 搜索条件
             params: {
-                assetName: dayjs().subtract(1, 'year').format('YYYY-MM-DD HH:mm:ss'),
-                brandModel: dayjs().add(1, 'month').format('YYYY-MM-DD HH:mm:ss')
+                assetName: null,
+                brandModel: null
 
             },
             userFormData: {
@@ -241,8 +241,8 @@ export default {
         async getList() {
             const formattedParams = {
                 ...this.params,
-                assetName: dayjs(this.params.assetName).format('YYYY-MM-DD HH:mm:ss'),
-                brandModel: dayjs(this.params.brandModel).format('YYYY-MM-DD HH:mm:ss'),
+                assetName: this.params.assetName ? dayjs(this.params.assetName).format('YYYY-MM-DD HH:mm:ss') : null,
+                brandModel: this.params.brandModel ? dayjs(this.params.brandModel).format('YYYY-MM-DD HH:mm:ss') : null,
             };
             const res = await axios({
                 method: "get",
