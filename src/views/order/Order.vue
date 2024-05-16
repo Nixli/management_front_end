@@ -72,6 +72,7 @@ import axios from "axios";
   export default {
     data() {
       return {
+        dishList:[],
         reserveForm: {
         // ... 其他表单项数据
         tableNumber: '', // 初始时选择一个桌子号码或为空字符串
@@ -141,7 +142,7 @@ import axios from "axios";
             console.log(this.tp)
             const res = await axios({
                 method: "post",
-                url: "http://localhost:8080/order/download?table="+table+"&tp="+this.tp,
+                url: "http://localhost:8080/order/download?table="+table+"&tp="+this.tp+"&employeeID="+localStorage.getItem("employeeID"),
                 data:cart
             }); 
             console.log(res.data);

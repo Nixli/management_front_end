@@ -12,14 +12,15 @@
             </el-select>
           </el-form-item>
 
-          <el-date-picker style="margin-top: 1px;" v-model="params.times" type="datetimerange" :picker-options="pickerOptions"
-            range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="right">
+          <el-date-picker style="margin-top: 1px;" v-model="params.times" type="datetimerange"
+            :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+            align="right">
           </el-date-picker>
 
           <el-form-item label="订单状态" style="margin-left: 10px;">
             <el-select v-model="params.status" class="filter-item" placeholder="请选择状态">
               <el-option v-for="(item, index) in this.options" :key="index" :label="item.label"
-                :value="item.value" ></el-option>
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
@@ -41,8 +42,8 @@
       </el-card>
 
       <el-table :data="list" border style="width: 100%">
-        <el-table-column prop="orderID" label="订单编号" align="center"  width="150"> </el-table-column>
-        <el-table-column prop="tableID" label="桌子编号" align="center"  width="100"> </el-table-column>
+        <el-table-column prop="orderID" label="订单编号" align="center" width="150"> </el-table-column>
+        <el-table-column prop="tableID" label="桌子编号" align="center" width="100"> </el-table-column>
         <el-table-column prop="orderTime" label="下单时间" align="center"> </el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="200"> </el-table-column>
         <el-table-column prop="totalPrice" label="总金额" align="center" width="200"> </el-table-column>
@@ -55,7 +56,7 @@
           <template slot-scope="{row,$index}">
             <el-button :disabled="!row.isResign" type="text" size="small"
               @click="removeFixedasset(row.roleID)">删除</el-button>
-            <el-button type="text" style="color: pink;"  size="small" @click="edit(row)">详情</el-button>
+            <el-button type="text" style="color: pink;" size="small" @click="edit(row)">详情</el-button>
             <el-button type="text" size="small" @click="alipay(row)">结账</el-button>
           </template>
         </el-table-column>
@@ -68,22 +69,25 @@
     </el-card>
 
     <!-- 弹窗区域 -->
-    <el-dialog :title="actionType == 'add' ? '新增角色' : '修改角色'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="actionType == 'add' ? '新增角色' : '订单详情'" :visible.sync="dialogFormVisible">
       <el-form :model="userFormData" class="demo-form-inline" label-width="120px">
-
-        <el-form-item label="角色名称">
-          <el-input v-model="userFormData.roleName" placeholder="角色名称"></el-input>
-        </el-form-item>
-
-        <el-form-item label="详情信息">
-          <el-input v-model="userFormData.roleDes" placeholder="详情信息"></el-input>
-        </el-form-item>
-        <!-- 
-          <el-switch v-model="userFormData.isResign" active-text="离职" inactive-text="在职" style="margin-left: 50px;">
-          </el-switch> -->
-
+        <el-row :gutter="20">
+                  <el-col :span="13" style="margin-top: 10px;" v-for="(item, index) in DetailList.orderDish" :key="index">
+                    <el-card >
+                      <div >{{item.dishesName}} x {{item.ct}} 
+                          单价：{{ item.dishesPrice }}</div>
+                    </el-card>        
+                  </el-col>
+                  <el-card >
+                     <el-card >
+                      <div >服务员:{{ DetailList.employeeDes }}</div>
+                    </el-card>
+                      <div >
+                          总金额：{{ DetailList.totalPrice }}</div>
+                    </el-card>
+        </el-row>
         <el-form-item style="margin-top: 20px;">
-          <el-button @click="submit" style="margin-left: 440px;">提交</el-button>
+          <!-- <el-button @click="submit" style="margin-left: 440px;">提交</el-button> -->
         </el-form-item>
 
       </el-form>
@@ -100,11 +104,12 @@ export default {
   data() {
     return {
       list: [],
-      tableList:'',
+      tableList: '',
+      DetailList: '',
       options: [
-		      {value: '已下单', label: '已下单'},
-		      {value: '已结账', label: '已结账' }
- 	    ],
+        { value: '已下单', label: '已下单' },
+        { value: '已结账', label: '已结账' }
+      ],
       // 分页相关
       total: 0,
       // 搜索条件
@@ -156,45 +161,45 @@ export default {
           }
         }]
       },
-  
+
     };
   },
   created() {
     console.log(localStorage.getItem("employeeID"))
-    this.getTableList(); 
+    this.getTableList();
     this.getList()
   },
 
   methods: {
     open(msg) {
-        this.$message({
-          message: msg,
-          type: 'success'
-        });
+      this.$message({
+        message: msg,
+        type: 'success'
+      });
 
-      },
-    alipay(row){
-        if(row.status=="已结账"){
-          this.open("该订单已支付");
-        } 
-        else{
-          console.log(6)
-           this.pay(row)
-        }   
-      },
+    },
+    alipay(row) {
+      if (row.status == "已结账") {
+        this.open("该订单已支付");
+      }
+      else {
+        console.log(6)
+        this.pay(row)
+      }
+    },
     async getTableList() {
       const res = await axios({
         method: "get",
         url: "http://localhost:8080/order/findAllTableId",
         params: {
-          
+
         }
       });
       console.log(res.data.data)
       this.tableList = res.data.data;
     },
     async pay(row) {
-      location.href="http://localhost:8080/alipay/sss?totalPrice="+ row.totalPrice+"&orderID="+row.orderID;
+      location.href = "http://localhost:8080/alipay/sss?totalPrice=" + row.totalPrice + "&orderID=" + row.orderID;
       // const res = await axios({
       //   method: "get",
       //   url: "http://localhost:8080/alipay/sss",
@@ -213,19 +218,18 @@ export default {
       });
       console.log(res)
       this.list = res.data.data;
-      this.total= res.data.count;
+      this.total = res.data.count;
     },
-    async getDetailList(row){
+    async getDetailList(row) {
       const res = await axios({
         method: "post",
-        url: "http://localhost:8080/order/findAll",
+        url: "http://localhost:8080/order/detail",
         params: {
           orderDishID: row.orderDishID,
         }
       });
-      console.log(res)
-      this.list = res.data.data;
-      this.total= res.data.count;
+      console.log(res.data.data)
+      this.DetailList=res.data.data
     },
 
     // 点击搜索
@@ -245,16 +249,16 @@ export default {
     // 打开新增弹窗，
     addOpen() {
       // 等待两秒后跳转页面
-            open('即将进入下单界面')
-            setTimeout(() => {
-                // 跳转页面
-                this.$router.push('/order/Order');
-            }, 1000);
+      open('即将进入下单界面')
+      setTimeout(() => {
+        // 跳转页面
+        this.$router.push('/order/Order');
+      }, 1000);
     },
 
     //修改弹窗
     edit(row) {
-      getDetailList(row)
+      this.getDetailList(row)
       // 打开弹窗
       this.dialogFormVisible = true
       console.log(row)
