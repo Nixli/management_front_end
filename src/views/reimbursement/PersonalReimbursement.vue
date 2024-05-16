@@ -44,7 +44,7 @@
                     <el-table-column label="操作" align="center" width="200px">
                         <template #default="{ row }">
                             <el-button type="primary" icon="el-icon-edit" circle @click="update(row)"
-                                v-if="row.approvalStatus === '待审核'" :disabled="row.approvalStatus !== '待审核'"></el-button>
+                                v-if="row.approvalStatus === '未通过' " :disabled="row.approvalStatus !== '待审核'"></el-button>
                         </template>
                     </el-table-column>
 

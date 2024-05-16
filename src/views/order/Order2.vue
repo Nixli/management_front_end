@@ -106,7 +106,6 @@ export default {
 		      {value: '已结账', label: '已结账' }
  	    ],
       // 分页相关
-   
       total: 0,
       // 搜索条件
       params: {

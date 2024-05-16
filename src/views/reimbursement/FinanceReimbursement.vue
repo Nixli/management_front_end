@@ -21,7 +21,7 @@
                     <el-table-column prop="approvalStatus" label="报销状态" align="center"></el-table-column>
                     <el-table-column fixed="right" label="生成凭证" align="center">
                         <template #default="{ row }">
-                            <el-button v-if="row.approvalStatus === '待审核' && row.isToVoucher === '否'" type="text"
+                            <el-button v-if="row.approvalStatus === '已通过' && row.isToVoucher === '否'" type="text"
                                 size="medium" icon="el-icon-document" @click="updateApprovalStatus(row)">生成凭证</el-button>
                         </template>
                     </el-table-column>
