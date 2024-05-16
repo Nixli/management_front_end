@@ -161,6 +161,7 @@ export default {
     };
   },
   created() {
+    console.log(localStorage.getItem("employeeID"))
     this.getTableList(); 
     this.getList()
   },
@@ -215,6 +216,18 @@ export default {
       this.list = res.data.data;
       this.total= res.data.count;
     },
+    async getDetailList(row){
+      const res = await axios({
+        method: "post",
+        url: "http://localhost:8080/order/findAll",
+        params: {
+          orderDishID: row.orderDishID,
+        }
+      });
+      console.log(res)
+      this.list = res.data.data;
+      this.total= res.data.count;
+    },
 
     // 点击搜索
     search() {
@@ -242,6 +255,7 @@ export default {
 
     //修改弹窗
     edit(row) {
+      getDetailList(row)
       // 打开弹窗
       this.dialogFormVisible = true
       console.log(row)

@@ -118,6 +118,10 @@ import axios from "axios";
         return this.tp;
       },
     },
+    created() {
+    console.log(localStorage.getItem("employeeID"))
+    this.searchDishs();
+    },
     methods: {
       open2() {
         this.$message({
@@ -171,6 +175,16 @@ import axios from "axios";
       } else {
         alert('请输入桌子号码！');
       }
+    },
+    //查询所有菜品
+    async searchDishs(){
+      const res = await axios({
+                method: "post",
+                url: "http://localhost:8080/dishes/findAllDishes",
+            }); 
+      console.log(res.data.data)
+      const ds=res.data.data
+      
     }
     },
   };
