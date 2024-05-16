@@ -1,7 +1,7 @@
 <template>
     <div>
       
-      <el-container>
+      <el-container style="width: 600px; float: left;">
         <el-header>
           <h1>菜单</h1>
           <el-input
@@ -33,7 +33,8 @@
           </el-row>
         </el-main>
       </el-container>
-      <el-container v-if="cart.length" class="cart-container">
+      <card>
+        <el-container v-if="cart.length" class="cart-container" style="width: 400px; float: left;">
         <el-header>
           <h1>购物车</h1>
         </el-header>
@@ -58,9 +59,11 @@
                 :value="table"
               ></el-option>
             </el-select>
-            <el-button style="margin-left: 310px;" type="primary" @click="orderdish(cart,reserveForm.tableNumber)">点餐</el-button></div>
+            <el-button style="margin-left: 360px;" type="primary" @click="orderdish(cart,reserveForm.tableNumber)">点餐</el-button></div>
         </el-footer>
       </el-container>
+      </card>
+      
     </div>
   </template>
   
