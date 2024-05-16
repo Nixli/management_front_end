@@ -102,7 +102,7 @@ export const menuRoutes = [
       }
     ]
   },
-  // 首页
+  // 个人中心
   {
     path: '/personal',
     component: () => import('@/layout/Layout.vue'),

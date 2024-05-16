@@ -332,10 +332,10 @@ export default {
       // 修改的时候需要把id带过去
       if (this.actionType === 'edit') {
         data.employeeID = this.employeeID
-        if(data.state === '离职') {
+        if(data.state === '在职') {
           data.endTime = new Date()
         }
-        if(data.state === '在职') {
+        if(data.state === '离职') {
           data.endTime = ""
         }
         const res = await axios({
