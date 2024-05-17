@@ -45,6 +45,7 @@
           <el-card class="menu-card">
             <el-main>
               <el-table :data="cart" style="width: 100%">
+                <el-table-column prop="dishID" label="菜品ID" v-if="false"></el-table-column>
                 <el-table-column prop="dishesName" label="菜品名称"></el-table-column>
                 <el-table-column prop="dishesPrice" label="价格" width="180"></el-table-column>
                 <el-table-column label="操作">
@@ -127,7 +128,7 @@ export default {
     console.log(localStorage.getItem("storeID"))
     // this.searchDishs();
     this.showDishList();
-    this.store_id
+    
   },
   methods: {
     open2() {
@@ -158,10 +159,15 @@ export default {
       console.log(cart)
       console.log(table)
       console.log(this.tp)
+      const dsv=[]
+      for (var i = 0;i<cart.length;i++) {
+        dsv[i]=cart[i].dishesID
+			}
+      console.log(dsv)
       const res = await axios({
         method: "post",
-        url: "http://localhost:8080/order/download?table=" + table + "&tp=" + this.tp + "&employeeID=" + localStorage.getItem("employeeID"),
-        data: cart
+        url: "http://localhost:8080/order/download?table=" + table + "&tp=" + this.tp + "&employeeID=" + localStorage.getItem("employeeID")+"&storeID="+localStorage.getItem("storeID"),
+        data: dsv
       });
       console.log(res.data);
       if (res.data.code == 200) {

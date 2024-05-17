@@ -79,11 +79,15 @@
                     </el-card>        
                   </el-col>
                   <el-card >
-                     <el-card >
-                      <div >服务员:{{ DetailList.employeeDes }}</div>
+                    <el-card>
+                      <div>门店：{{ this.storeName }}</div>
                     </el-card>
+                     <el-card >
+                      <div >服务员:  {{ DetailList.employeeDes }}</div>
+                    </el-card>
+                    <el-card>
                       <div >
-                          总金额：{{ DetailList.totalPrice }}</div>
+                          总金额：{{ DetailList.totalPrice }}</div></el-card>
                     </el-card>
         </el-row>
         <el-form-item style="margin-top: 20px;">
@@ -106,6 +110,7 @@ export default {
       list: [],
       tableList: '',
       DetailList: '',
+      storeName:'',
       options: [
         { value: '已下单', label: '已下单' },
         { value: '已结账', label: '已结账' }
@@ -117,6 +122,7 @@ export default {
         tableID: undefined,
         status: undefined,
         times: undefined,
+        store_id: localStorage.getItem('storeID'),
         pageno: 1,
         pagesize: 5,
       },
@@ -166,8 +172,10 @@ export default {
   },
   created() {
     console.log(localStorage.getItem("employeeID"))
+    console.log( localStorage.getItem('storeID'))
     this.getTableList();
     this.getList()
+    this.getStore()
   },
 
   methods: {
@@ -199,6 +207,17 @@ export default {
       }else{
         this.removeFixedasset(oID,tID)
       }
+    },
+    async getStore() {
+      const res = await axios({
+        method: "get",
+        url: "http://localhost:8080/order/searchStoreName",
+        params: {
+          storeId: localStorage.getItem('storeID')
+        }
+      });
+      console.log(res.data.data)
+      this.storeName=res.data.data
     },
     async getTableList() {
       const res = await axios({
