@@ -54,9 +54,9 @@
 </el-table-column> -->
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template slot-scope="{row,$index}">
-            <el-button :disabled="!row.isResign" type="text" size="small"
-              @click="removeFixedasset(row.roleID)">删除</el-button>
-            <el-button type="text" style="color: pink;" size="small" @click="edit(row)">详情</el-button>
+            <el-button  style="color: pink;"  type="text" size="small"
+              @click="removeFix(row.orderID,row.status,row.tableID)">取消</el-button>
+            <el-button type="text" style="color: gray;" size="small" @click="edit(row)">详情</el-button>
             <el-button type="text" size="small" @click="alipay(row)">结账</el-button>
           </template>
         </el-table-column>
@@ -178,6 +178,12 @@ export default {
       });
 
     },
+    open2(msg) {
+      this.$message({
+        message: msg,
+      });
+
+    },
     alipay(row) {
       if (row.status == "已结账") {
         this.open("该订单已支付");
@@ -185,6 +191,13 @@ export default {
       else {
         console.log(6)
         this.pay(row)
+      }
+    },
+    removeFix(oID,status,tID){
+      if(status=="已结账"){
+          this.open2("结账订单不能取消")
+      }else{
+        this.removeFixedasset(oID,tID)
       }
     },
     async getTableList() {
@@ -287,19 +300,19 @@ export default {
       this.dialogFormVisible = false
       this.getList()
     },
-    //删除固定资产
-    async removeFixedasset(id) {
+    //删除
+    async removeFixedasset(oID,tID) {
 
       const res = await axios({
-        url: '/removeEmployee',
+        url: 'http://localhost:8080/order/delete',
         method: 'post',
-        // data一定是个对象，不能直接把id给data，把id变成一个对象给到data
-        data: {
-          employeeID: id
+        params: {
+          orderID: oID,
+          tableID: tID
         }
       })
       this.getList()
-    },
+  },
 
   },
 

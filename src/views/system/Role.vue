@@ -2,23 +2,23 @@
   <div style="height: auto; width: auto;">
 
     <!-- 搜素和新增区域 -->
-    <!-- <el-card>
-      <div style="display: flex; flex-direction: row;"> -->
+    <el-card>
+      <div style="display: flex; flex-direction: row;">
         <!-- 搜索区域 -->
-        <!-- <el-form :inline="true">
-          <el-form-item label="员工姓名">
-            <el-input v-model="params.name" placeholder="请输入员工姓名"></el-input>
+        <el-form :inline="true">
+          <el-form-item label="姓名">
+            <el-input v-model="params.roleName" placeholder="请输入员工姓名"></el-input>
           </el-form-item>
-          <el-form-item label="员工职位">
-            <el-input v-model="params.position" placeholder="请输入员工职位"></el-input>
+          <el-form-item label="详情">
+            <el-input v-model="params.roleDes" placeholder="请输入详情信息"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="search" type="primary" icon="el-icon-search">搜索</el-button>
           </el-form-item>
-          <el-button type="primary" @click="addOpen">新增员工信息</el-button>
+          <el-button type="primary" @click="addOpen">新增角色信息</el-button>
         </el-form>
       </div>
-    </el-card> -->
+    </el-card>
 
     <!-- 员工信息表 -->
     <el-card style="margin-top: 20px;">
@@ -38,7 +38,7 @@
         </el-table-column> -->
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template slot-scope="{row,$index}">
-            <el-button :disabled="!row.isResign" type="text" size="small"
+            <el-button  type="text" size="small"
               @click="removeFixedasset(row.roleID)">删除</el-button>
             <el-button type="text" size="small" @click="edit(row)">修改</el-button>
 
@@ -92,10 +92,8 @@ export default {
       total: 0,
       // 搜索条件
       params: {
-        roleID: '',
         roleName: '',
-        roleDes: '',
-        permissionID: ''
+        roleDes: ''
       },
       // 控制弹框的显示与隐藏
       dialogFormVisible: false,
@@ -119,11 +117,9 @@ export default {
   methods: {
     async getList() {
             const res = await axios({
-                method: "get",
+                method: "post",
                 url: "http://localhost:8080/role/findAll",
-                params: {
-                    
-                }
+                data: this.params
             }); 
             console.log(res)
             this.list = res.data.data;
@@ -150,13 +146,9 @@ export default {
       this.actionType = 'add'
       // 重置userFormData
       this.userFormData = {
-        name: '',
-        age: '',
-        sex: '',
-        position: '',
-        department: '',
-        isResign:false,
-        accountBook: { bookID: localStorage.getItem('bookID') } // 使用关系属性名
+        roleName: '',
+        roleDes: ''
+        // accountBook: { bookID: localStorage.getItem('bookID') } // 使用关系属性名
       }
     },
 
@@ -181,24 +173,35 @@ export default {
       // 修改的时候需要把id带过去
       if (this.actionType === 'edit') {
         data.roleID = this.roleID
-      }
-      const res = await axios({
+        const res = await axios({
         url: 'http://localhost:8080/role/update',
         method: 'post',
         data: data
       })
       this.dialogFormVisible = false
       this.getList()
+      }
+      //新增不带id
+      else{
+        const res = await axios({
+        url: 'http://localhost:8080/role/insert',
+        method: 'post',
+        data: data
+      })
+      this.dialogFormVisible = false
+      this.getList()
+      }
+      
     },
-    //删除固定资产
+    //删除
     async removeFixedasset(id) {
 
       const res = await axios({
-        url: '/removeEmployee',
+        url: 'http://localhost:8080/role/deleteRoleById',
         method: 'post',
         // data一定是个对象，不能直接把id给data，把id变成一个对象给到data
-        data: {
-          employeeID: id
+        params: {
+          roleID: id
         }
       })
       this.getList()
