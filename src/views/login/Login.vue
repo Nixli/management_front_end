@@ -83,6 +83,7 @@ export default {
       })
       // 登录成功，把用户的id和用户的角色存放到本地
       if (LoginResult.data.code == 200) {
+        localStorage.setItem("storeID", LoginResult.data.data.storeID);
         localStorage.setItem("bookID", LoginResult.data.data.bookID);
         localStorage.setItem("employeeDes", LoginResult.data.data.employeeDes);
         localStorage.setItem("employeeID", LoginResult.data.data.employeeID);
