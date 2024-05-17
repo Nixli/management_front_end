@@ -99,6 +99,11 @@ export const menuRoutes = [
         path: '/Role',
         component: () => import('@/views/system/Role'),
         meta: { title: '角色管理' },
+      },
+      {
+        path: '/Dish',
+        component: () => import('@/views/dish/Dish'),
+        meta: { title: '菜品大类管理' },
       }
     ]
   },
