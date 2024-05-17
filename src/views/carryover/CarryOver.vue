@@ -1,7 +1,7 @@
 <template>
     <el-card class="test">
         <div slot="header"><span>期末结转</span></div>
-        {{ this.xxlist }}
+
         <el-row :gutter="20">
             <el-col :span="8">
                 <el-card class="box-card">
@@ -10,7 +10,7 @@
                         <el-button style="float: right; padding: 3px 0" type="text" @click="update0()">测算金额</el-button>
                     </div>
                     <div class="text item" v-if="statue0 === true">
-                        {{ this.totalDepreciation}}
+                        {{ this.totalDepreciation }}
                     </div>
                 </el-card>
             </el-col>
@@ -114,14 +114,14 @@ export default {
         async getShouVoucherList() {
             const currentYearMonth = dayjs().format('YYYY-MM');
             const res = await axios({
-                url: "/voucher",
+                url: "http://localhost:8080/voucher/voucher",
                 method: "get",
                 params: {
                     bookID: localStorage.getItem('bookID'),
                     voucherWord: '收'
                 }
             })
-            this.VAT = res.data.data.list.map(item => ({
+            this.VAT = res.data.data.map(item => ({
                 ...item,
                 cime: dayjs(item.cime).format('YYYY-MM')
             }))
@@ -131,9 +131,9 @@ export default {
             });
             console.log(this.VAT)
 
-            this.totalshouAmountSum = this.VAT.reduce((accumulator, currentValue) => {
-                // 将字符串形式的金额转换为浮点数并累计
-                const amount = parseFloat(currentValue.totalAmount.replace(',', '')) || 0;
+            this.totalfuAmountSum = this.VAT.reduce((accumulator, currentValue) => {
+                // 检查totalAmount是否是字符串，并转换为浮点数
+                const amount = typeof currentValue.totalAmount === 'string' ? parseFloat(currentValue.totalAmount.replace(',', '')) : currentValue.totalAmount;
                 return accumulator + amount;
             }, 0);
         },
@@ -141,14 +141,14 @@ export default {
         async getFuVoucherList() {
             const currentYearMonth = dayjs().format('YYYY-MM');
             const res = await axios({
-                url: "/voucher",
+                url: "http://localhost:8080/voucher/voucher",
                 method: "get",
                 params: {
                     bookID: localStorage.getItem('bookID'),
                     voucherWord: '付'
                 }
             })
-            this.VAT = res.data.data.list.map(item => ({
+            this.VAT = res.data.data.map(item => ({
                 ...item,
                 cime: dayjs(item.cime).format('YYYY-MM')
             }))
@@ -158,11 +158,12 @@ export default {
             });
 
             this.totalfuAmountSum = this.VAT.reduce((accumulator, currentValue) => {
-                // 将字符串形式的金额转换为浮点数并累计
-                const amount = parseFloat(currentValue.totalAmount.replace(',', '')) || 0;
+                // 检查totalAmount是否是字符串，并转换为浮点数
+                const amount = typeof currentValue.totalAmount === 'string' ? parseFloat(currentValue.totalAmount.replace(',', '')) : currentValue.totalAmount;
                 return accumulator + amount;
             }, 0);
         },
+
 
     },
     created() {

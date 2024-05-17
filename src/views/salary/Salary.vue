@@ -381,7 +381,7 @@ export default {
                 payoutDate:new Date(),
                 createDate:new Date(),
             }
-            data.employee = this.selectedEmployee ;
+            data.employeeID = this.selectedEmployee ;
             if (this.actionType === 'edit') {
                 data.salaryID = this.salaryID
             }
