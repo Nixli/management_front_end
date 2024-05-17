@@ -1,4 +1,10 @@
 <template>
+    <div>
+      
+      <el-container style="width: 600px; float: left;">
+        <el-header>
+          <h1>菜单</h1>
+          <el-input
   <div>
 
     <el-container>
@@ -10,61 +16,64 @@
             @input="filterDishes"
             clearable
           ></el-input>
-      </el-header>
-      <el-main>
-        <el-row :gutter="20">
-          <el-col :span="24" v-for="(category, categoryIndex) in filteredCategories" :key="categoryIndex">
-            <el-card class="menu-card">
-              <div slot="header" class="clearfix">
-                <span>{{ category.name }}</span>
-              </div>
-              <el-row :gutter="20">
-                <el-col :span="12" v-for="(dish, dishIndex) in category.dishes" :key="dishIndex">
-                  <el-card class="dish-card">
-                    <div slot="header">{{ dish.name }}</div>
-                    <div>描述：{{ dish.description }}</div>
-                    <div class="price">价格: {{ dish.price }}</div>
-                    <el-button type="primary" @click="addToCart(dish)">添加到购物车</el-button>
-                  </el-card>
-                </el-col>
-              </el-row>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
-    <el-container v-if="cart.length" class="cart-container">
-      <el-header>
-        <h1>购物车</h1>
-      </el-header>
-      <el-main>
-        <el-table :data="cart" style="width: 100%">
-          <el-table-column prop="name" label="菜品名称"></el-table-column>
-          <el-table-column prop="price" label="价格" width="180"></el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button @click="removeFromCart(scope.$index)" type="text" size="small">移除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
-      <el-footer>
-        <div>总价: {{ totalPrice }}
-          <el-select style="margin-left: 50px;" v-model="reserveForm.tableNumber" placeholder="请选择桌子号码">
-            <el-option
+        </el-header>
+        <el-main>
+          <el-row :gutter="20">
+            <el-col :span="24" v-for="(category, categoryIndex) in filteredCategories" :key="categoryIndex">
+              <el-card class="menu-card">
+                <div slot="header" class="clearfix">
+                  <span>{{ category.name }}</span>
+                </div>
+                <el-row :gutter="20">
+                  <el-col :span="12" v-for="(dish, dishIndex) in category.dishes" :key="dishIndex">
+                    <el-card class="dish-card">
+                      <div slot="header">{{ dish.name }}</div>
+                      <div>描述：{{ dish.description }}</div>
+                      <div class="price">价格: {{ dish.price }}</div>
+                      <el-button type="primary" @click="addToCart(dish)">添加到购物车</el-button>
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-main>
+      </el-container>
+      <card>
+        <el-container v-if="cart.length" class="cart-container" style="width: 400px; float: left;">
+        <el-header>
+          <h1>购物车</h1>
+        </el-header>
+        <el-main>
+          <el-table :data="cart" style="width: 100%">
+            <el-table-column prop="name" label="菜品名称"></el-table-column>
+            <el-table-column prop="price" label="价格" width="180"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button @click="removeFromCart(scope.$index)" type="text" size="small">移除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-main>
+        <el-footer>
+          <div>总价: {{ totalPrice }} 
+            <el-select style="margin-left: 50px;" v-model="reserveForm.tableNumber" placeholder="请选择桌子号码">
+              <el-option
                 v-for="table in tableNumbers"
                 :key="table"
                 :label="table"
                 :value="table"
               ></el-option>
-          </el-select>
-          <el-button style="margin-left: 310px;" type="primary" @click="orderdish(cart,reserveForm.tableNumber)">点餐</el-button></div>
-      </el-footer>
-    </el-container>
-  </div>
-</template>
-
-<script>
+            </el-select>
+            <el-button style="margin-left: 360px;" type="primary" @click="orderdish(cart,reserveForm.tableNumber)">点餐</el-button></div>
+        </el-footer>
+      </el-container>
+      </card>
+      
+    </div>
+  </template>
+  
+  <script>
 
 
 import axios from "axios";
