@@ -261,6 +261,19 @@ export const menuRoutes = [
     ]
   },
 
+   {
+    path:'/dishSales',
+    component:() => import('@/layout/Layout.vue'),
+    meta:{ title: '菜品销量统计',menu: true,icon: 'el-icon-s-marketing', role: ['财务','管理员']},
+    children: [
+      {
+        path:'',
+        meta: { title: '菜品销量统计' },
+        component: () => import('@/views/dishSales/dishSales.vue'),
+      },
+    ]
+  },
+
   //员工中心
   // {
   //   path: '/personalCenter',
