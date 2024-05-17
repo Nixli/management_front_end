@@ -311,7 +311,13 @@ export default {
                 method: "post",
                 data: data
             })
-            this.$message=res.data.msg
+            if(res.code==200){
+                this.$notify({
+                    title: '成功',
+                    message: '修改成功',
+                    type: 'success'
+                });
+            }
             this.getList()
             this.show = false
         },
@@ -332,6 +338,13 @@ export default {
                 method: "post",
                 data: data
             })
+            if(res.code==200){
+                this.$notify({
+                    title: '成功',
+                    message: '添加成功',
+                    type: 'success'
+                });
+            }
             this.getList()
             this.addshow = false
         },
