@@ -17,19 +17,23 @@
             <el-card>
                 <div>
                     <el-row type="flex" justify="space-between" align="middle">
-                        <!-- 左侧部分，包括新增按钮 -->
-                        <el-col :span="6">
-                            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addopen">新增报销</el-button>
-                        </el-col>
-
-                        <!-- 右侧部分，包括查询输入框 -->
-                        <el-col :span="9" :offset="14">
-                            <el-input placeholder="请输入报销类型" prefix-icon="el-icon-search"
-                                v-model="params.category"></el-input>
-                        </el-col>
-                        <el-col :span="3" :offset="0.5">
-                            <el-button type="primary" @click="search">查询</el-button>
-                        </el-col>
+                        <el-form :inline="true">
+                            <!-- 右侧部分，包括查询输入框 -->
+                            <!-- 菜系下拉列表框 -->
+                            <el-form-item label="该账套所有的报销类别">
+                                <el-select v-model="params.category" class="filter-item" placeholder="请选择报销类别">
+                                <el-option v-for="(reimbursement, index) in categoryList" :label="reimbursement.category" :value="reimbursement.category"></el-option>
+                                </el-select>
+                            </el-form-item>
+                                <!-- 搜索按钮 -->
+                            <el-form-item>
+                                <el-button type="primary" @click="search">查询</el-button>
+                            </el-form-item>
+                            <el-form-item>
+                                <!-- 左侧部分，包括新增按钮 -->
+                                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addopen">新增报销</el-button>
+                            </el-form-item>
+                        </el-form>
                     </el-row>
                 </div>
                 <el-table :data="list" style="width: 100%;margin-top: 15px;" :header-row-class-name="tableHeaderClassName">
@@ -203,7 +207,7 @@ export default {
             isShow:false,
             DeclarationDate:'',
             ReviewDate:'',
-            name: localStorage.getItem('name'),
+            //name: localStorage.getItem('name'),
             count: "报销金额",
             style: '报销类别',
             reason: "报销事由",
@@ -211,6 +215,7 @@ export default {
             //reimbursementID: '',
             tableHeaderClassName: 'custom-table-header',// 自定义的表头样式类名
             list: [],
+            categoryList:'',
             //reimbursementID: list.reimbursementID,
             userFormData: {
                 date: dayjs().format('YYYY-MM-DD '),
@@ -223,18 +228,19 @@ export default {
             pageno: 1,
             pagesize: 4,
             total: 0,
-            //bookId:6,
+            bookId:6,
+            employeeId:0,
             params: {
                 category: '',
-
             },
             show: false,
-            addshow: false
+            addshow: false,
         }
     },
     created() {
         this.employeeId=localStorage.getItem('employeeID'),
         this.bookID = localStorage.getItem('bookID'),
+        this.getCategoryList()
         this.getList()
     },
     methods: {
@@ -245,6 +251,17 @@ export default {
             this.ReviewDate = row.updateTime
             this.curState = row.approvalStatus
         },
+        async getCategoryList(){
+            const res = await axios({
+                url:"http://localhost:8080/reimbursement/findAllCategoryList",
+                method:"get",
+                params:{
+                    bookId:this.bookId,
+                    //bookId:6,
+                }
+            });
+            this.categoryList=res.data.data
+         },
         async getList() {
             const formattedParams = {
                 ...this.params,
@@ -255,8 +272,9 @@ export default {
                 params: {
                     pageno: this.pageno,
                     pagesize: this.pagesize,
-                    bookId:this.bookID,
-                    employeeId:this.employeeID,
+                    bookId:this.bookId,
+                    //bookId:6,
+                    employeeId:this.employeeId,
                     ...formattedParams
                     //employeeID: localStorage.getItem('employeeID')
                 },
@@ -331,7 +349,7 @@ export default {
                 ...this.userFormData,
                 createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                 employeeId: this.employeeId,
-                bookId: this.bookID
+                bookId: this.bookId
             }
             const res = await axios({
                 url: "http://localhost:8080/reimbursement/add",

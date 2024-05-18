@@ -5,13 +5,13 @@
         <!-- 搜索区域 -->
         <el-form :inline="true">
           <!-- 菜系下拉列表框 -->
-          <el-form-item label="菜系">
+          <el-form-item label="该门店所有的菜系">
             <el-select v-model="params.dishID" class="filter-item" placeholder="请选择菜系">
               <el-option v-for="(dish, index) in dishIDList" :label="dish.dishType" :value="dish.dishID"></el-option>
             </el-select>
           </el-form-item>
           <!-- 时间 -->
-          <el-form-item label="根据月份查询">
+          <el-form-item label="根据日期查询">
             <el-date-picker v-model="params.beginTime" type="date" placeholder="开始日期">
             </el-date-picker>
           </el-form-item>
@@ -53,11 +53,12 @@ export default {
       // 搜索条件
       params: {
         //大类ID
-        //dishID:1,
-        dishID:localStorage.getItem('dishID'),
+        dishID:undefined,
+        //storeId:localStorage.getItem('storeID'),
         beginTime: undefined,
         endTime: undefined
       },
+      storeId:0,
     };
   },
   mounted() { //最早获取DOM元素的生命周期函数，挂载完毕
@@ -66,6 +67,8 @@ export default {
     // })
   },
   created() {
+    //获取保存的门店ID
+    this.storeId = localStorage.getItem('storeId'),
     //获取大类集合
     this.getDishIDList();
   },
@@ -109,6 +112,7 @@ export default {
         method: "get",
         url: "http://localhost:8080/dish/findDishByStoreID",
         params: {
+          storeId:this.storeId,
           //storeId: 1,
         },
       });
@@ -128,6 +132,7 @@ export default {
         method: "post",
         url: "http://localhost:8080/dishes/getDishesNameList",
         params: {
+          storeId:this.storeId,
           //storeId: 1,
           ...formattedParams,
         },
@@ -163,6 +168,7 @@ export default {
         method: "post",
         url: "http://localhost:8080/dishes/getDishesCountList",
         params: {
+          storeId:this.storeId,
           //storeId: 1,
           ...formattedParams,
         },

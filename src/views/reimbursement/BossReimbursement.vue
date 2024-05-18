@@ -2,14 +2,22 @@
     <div>
         <el-card>
             <el-card>
-                <span style="font-size: 18px;font-weight: bold;font-family: 'Times New Roman', Times, serif;">用户报销</span>
+                <span style="font-size: 18px;font-weight: bold;font-family: 'Times New Roman', Times, serif;">报销审核</span>
             </el-card>
             <el-card>
                 <div>
-                    <!-- 右侧部分，包括查询输入框 -->
-                    <el-input placeholder="请输入查询内容" prefix-icon="el-icon-search" v-model="params.category"
-                        style="width: 300px;"></el-input>
-                    <el-button type="primary" @click="search">查询</el-button>
+                    <el-form :inline="true">
+                        <!-- 菜系下拉列表框 -->
+                        <el-form-item label="该账套所有的报销类别">
+                            <el-select v-model="params.category" class="filter-item" placeholder="请选择报销类别">
+                            <el-option v-for="(reimbursement, index) in categoryList" :label="reimbursement.category" :value="reimbursement.category"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <!-- 搜索按钮 -->
+                       <el-form-item>
+                            <el-button type="primary" @click="search">查询</el-button>
+                       </el-form-item>
+                    </el-form>
                 </div>
                 <el-table :data="list" style="width: 100%;margin-top: 15px;" :header-row-class-name="tableHeaderClassName">
                     <el-table-column prop="reimbursementId" label="编号" align="center"> </el-table-column>
@@ -45,14 +53,16 @@ import dayjs from 'dayjs';
 export default {
     data() {
         return {
-            name: localStorage.getItem('name'),
+            //approver: localStorage.getItem('employeeDes'),
+            approver:'',
             count: "报销金额",
             style: '报销类别',
             reason: "报销事由",
             note: "备注",
-            reimbursementID: '',
+            reimbursementId: '',
             tableHeaderClassName: 'custom-table-header',// 自定义的表头样式类名
             list: [],
+            categoryList:'',
             userFormData: {
                 date: dayjs().format('YYYY-MM-DD '),
                 amount: '',
@@ -65,43 +75,63 @@ export default {
             total: 0,
             params: {
                 category: '',
-                bookId: localStorage.getItem('bookID')
             },
-            bookID: localStorage.getItem('bookID')
+            bookId:6,
         }
     },
     created() {
+        this.approver=localStorage.getItem('employeeDes'),
+        this.bookId=localStorage.getItem('bookID'),
+        this.getCategoryList()
         this.getList()
     },
     methods: {
 
         async accept(row) {
-            const data = {
-                reimbursementID: row.reimbursementID,
-                name:this.name,
-                approvalStatus:'已通过'
-            }
+            // const data = {
+                
+            // }
             const res = await axios({
-                url: 'http://localhost:8080/updateApproval',
+                url: 'http://localhost:8080/reimbursement/updateApproval',
                 method: "post",
-                data: data
+                params:{
+                    reimbursementId: row.reimbursementId,
+                    //approver:'boss',
+                    approver:this.approver,
+                    approvalStatus:'已通过'
+                }
             })
             this.getList()
         },
         async reject(row) {
-            const data = {
-                reimbursementID: row.reimbursementID,
-                name:this.name,
-                approvalStatus:'未通过'
-            }
+            // const data = {
+            //     reimbursementId: row.reimbursementId,
+            //     approver:'boss',
+            //     approvalStatus:'未通过'
+            // }
             const res = await axios({
-                url: 'http://localhost:8080/updateApproval',
+                url: 'http://localhost:8080/reimbursement/updateApproval',
                 method: "post",
-                data: data
+                params:{
+                    reimbursementId: row.reimbursementId,
+                    //approver:'boss',
+                    approver:this.approver,
+                    approvalStatus:'未通过'
+                }
             })
             this.getList()
         },
-
+        async getCategoryList(){
+            const res = await axios({
+                url:"http://localhost:8080/reimbursement/findAllCategoryList",
+                method:"get",
+                params:{
+                    bookId:this.bookId,
+                    //bookId:6,
+                }
+            });
+            this.categoryList=res.data.data
+         },
         async getList() {
             const res = await axios({
                 url: "http://localhost:8080/reimbursement/findAll",
@@ -110,6 +140,8 @@ export default {
                     ...this.params,
                     pageno: this.pageno,
                     pagesize: this.pagesize,
+                    bookId:this.bookId,
+                    //bookId:6,
                 }
             });
             this.list = res.data.data.map(item => {
