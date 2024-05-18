@@ -176,13 +176,13 @@ export default {
         employeeID: '',
         employeeDes: '',
         sex: '',
-        roleName: '',
+        bankcardID: '',  
         storeName: '',
         password: '',
         checkPass: '',
         phone: '',
         email: '',
-        bankcardID: '',
+        roleName: '',
         createTime: '',
         endTime: '',
         state: '',
@@ -228,12 +228,13 @@ export default {
         },
       });
       this.list = res.data.data;
+      console.log(this.list)
       this.total = res.data.count;
     },
     async getRole() {
       const resRole = await axios({
         method: "get",
-        url: "http://localhost:8080/role/findAll",
+        url: "http://localhost:8080/role/findAllRoleName",
       });
       this.roleList = resRole.data.data;
     },
