@@ -205,7 +205,7 @@ export default {
       if(status=="已结账"){
           this.open2("结账订单不能取消")
       }else{
-        this.removeFixedasset(oID,tID)
+        this.openx(oID,tID);
       }
     },
     async getStore() {
@@ -332,7 +332,24 @@ export default {
       })
       this.getList()
   },
-
+  openx(oID,tID) {
+        this.$confirm('是否取消订单', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '取消订单成功!'
+          });
+          this.removeFixedasset(oID,tID)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '操作撤回！'
+          });          
+        });
+      }
   },
 
 }

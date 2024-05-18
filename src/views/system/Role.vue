@@ -39,7 +39,7 @@
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template slot-scope="{row,$index}">
             <el-button  type="text" size="small"
-              @click="removeFixedasset(row.roleID)">删除</el-button>
+              @click="open(row.roleID)">删除</el-button>
             <el-button type="text" size="small" @click="edit(row)">修改</el-button>
 
           </template>
@@ -207,6 +207,24 @@ export default {
       this.getList()
     },
 
+    open(id) {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.removeFixedasset(id)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      }
   },
 
 }
