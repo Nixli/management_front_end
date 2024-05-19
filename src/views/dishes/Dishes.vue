@@ -7,7 +7,7 @@
         <!-- 搜索区域 -->
         <el-form :inline="true">
           <el-form-item label="菜品名称">
-            <el-input v-model="params.dishType" placeholder="请输入菜品名称"></el-input>
+            <el-input v-model="params.dishesName" placeholder="请输入菜品名称"></el-input>
           </el-form-item>
           <el-form-item label="门店id">
             <el-input v-model="params.storeId" placeholder="请输入门店id"></el-input>
@@ -35,8 +35,14 @@
         <el-table-column prop="dishesDes" label="菜品名称" align="center"> </el-table-column>
         <el-table-column label="菜品图片" align="center"> 
           <template slot-scope="{ row }">
-            <!-- 使用 row.dishImg 作为图片的源 -->
-            <el-image :src="row.dishImg"></el-image>
+            <div>
+              <el-image v-if="row.dishImg" :src="row.dishImg"></el-image>
+              <el-upload v-else :action=imgUrl+row.dishesID :show-file-list="true"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
+                        style="width: 100%; height: 100%;">
+                <i class="el-icon-plus avatar-uploader-icon" style="width: 100%; height: 100%;"></i>
+              </el-upload>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="storeid" label="门店id" align="center"> </el-table-column>
@@ -106,9 +112,14 @@ export default {
       total: 0,
       // 搜索条件
       params: {
-        dishType: '',
+        dishesName: '',
         storeId: '',
       },
+      //图片地址
+      imgUrl:"http://localhost:8080/dishes/uploadDishImg?dishesID="
+      ,
+      // 标志位，用于控制是否需要更新数据
+      needUpdate: false,
       // 控制弹框的显示与隐藏
       dialogFormVisible: false,
       // 表单的数据
@@ -147,17 +158,31 @@ export default {
       console.log(this.params)
       const re = await axios({
         method: "get",
-        url: "http://localhost:8080/dish/findAllDishByStoreAndDishType",
+        url: "http://localhost:8080/dishes/findAllDishesByDishesNameAndStoreid",
         params: {
-          dishType: this.params.dishType,
+          dishType: this.params.dishesName,
           storeId: this.params.storeId
-        },
+        }
       });
       console.log(re)
       this.list = re.data.data;
       this.total = re.data.count;
     },
+    beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 200;
 
+            if (!isJPG) {
+                this.$message.error('上传图片只能是 JPG/PNG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传图片大小不能超过 200MB!');
+            }
+            return isJPG && isLt2M;
+    },
+    handleAvatarSuccess(){
+      this.getList();
+    },
     // 页码改变
     pagechange(pageno) {
       // 条件改变
@@ -212,6 +237,7 @@ export default {
           console.log(result);
           if (result.data.code == 200) {
             alert(result.data.msg);
+            
             this.getList();
           } else {
             alert(result.data.msg);
@@ -245,6 +271,8 @@ export default {
         data: {
           dishesID: row.dishesID
         }
+      }).then(result => {
+        alert(result.data.msg);
       })
       this.getList()
     },

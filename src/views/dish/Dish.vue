@@ -33,7 +33,7 @@
           <el-table-column prop="storeId" label="门店id" align="center"> </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="{ row }">
-              <el-button type="text" size="small" @click="removeEmployee(row.dish)">删除</el-button>
+              <el-button type="text" size="small" @click="removeEmployee(row)">删除</el-button>
   
               <!-- 修改删除按钮操作，以及后续操作 -->
   
@@ -206,14 +206,15 @@
         }
       },
       //删除菜品大类
-      async removeEmployee(id) {
+      async removeEmployee(dish) {
           console.log(this.newDishData);
+          console.log(dish.dishID);
         const res = await axios({
           url: 'http://localhost:8080/dish/deleteDish',
           method: 'post',
           // data一定是个对象，不能直接把id给data，把id变成一个对象给到data
           data: {
-            dishID: id
+            dishID: dish.dishID
           }
         })
         this.getList()
