@@ -119,7 +119,7 @@ export default {
     methods: {
         async getList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/findAll",
+                url: "http://localhost:8080/summary/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -157,7 +157,7 @@ export default {
                     summaryID: row.summaryID,
                 }
                 const res = await axios({
-                    url: "http://172.16.110.32:8080/summary/delete",
+                    url: "http://localhost:8080/summary/delete",
                     method: "post",
                     data: data
                 })
@@ -172,7 +172,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/update",
+                url: "http://localhost:8080/summary/update",
                 method: "post",
                 data: data
             })
@@ -188,7 +188,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/add",
+                url: "http://localhost:8080/summary/add",
                 method: "post",
                 data: data
             })
