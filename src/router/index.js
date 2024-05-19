@@ -104,6 +104,11 @@ export const menuRoutes = [
         path: '/Dish',
         component: () => import('@/views/dish/Dish'),
         meta: { title: '菜品大类管理' },
+      },
+      {
+        path: '/Dishes',
+        component: () => import('@/views/dishes/Dishes'),
+        meta: { title: '菜品小类管理' },
       }
     ]
   },
