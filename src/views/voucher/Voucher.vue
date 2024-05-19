@@ -339,7 +339,7 @@ export default {
                 method: 'post',
                 data: data
             })
-            if (res.code == 200) {
+            if (res.data.code === 200) {
                 Message.success('新增成功,即将进入凭证列表')
                 setTimeout(() => {
                     // 跳转页面
