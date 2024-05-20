@@ -36,11 +36,13 @@
         <el-table-column label="菜品图片" align="center"> 
           <template slot-scope="{ row }">
             <div>
-              <el-image v-if="row.dishImg" :src="row.dishImg"></el-image>
-              <el-upload v-else :action=imgUrl+row.dishesID :show-file-list="true"
+              <!-- 始终显示上传按钮 -->
+              <el-upload :action="imgUrl + row.dishesID" :show-file-list="true"
                         :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
                         style="width: 100%; height: 100%;">
-                <i class="el-icon-plus avatar-uploader-icon" style="width: 100%; height: 100%;"></i>
+                <el-button v-if="!row.dishImg" class="avatar-uploader-trigger" type="primary">上传图片</el-button>
+                <!-- 如果存在图片，则显示图片 -->
+                <el-image v-if="row.dishImg" :src="row.dishImg"></el-image>
               </el-upload>
             </div>
           </template>
