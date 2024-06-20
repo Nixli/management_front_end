@@ -266,7 +266,7 @@ export default {
         },
         async getSummaryList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/findAll",
+                url: "http://localhost:8081/summary/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -278,7 +278,7 @@ export default {
         },
         async getaccountingAccountList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/accountingAccount/findAll",
+                url: "http://localhost:8081/accounting/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -290,18 +290,18 @@ export default {
         },
         async getVoucherWordList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/voucherWord/findAll",
+                url: "http://localhost:8081/voucherWord/findAll",
                 method: "get",
             });
             this.voucherWordlist = res.data.data
         },
         async getVoucher() {
             const data = {
-                bookID: localStorage.getItem('bookID'),// 使用关系属性名
-                voucherID: localStorage.getItem('voucherID')
+                bookId: localStorage.getItem('bookID'),// 使用关系属性名
+                voucherId: localStorage.getItem('voucherID')
             };
             const res = await axios({
-                url: 'http://localhost:8080/voucher/voucher',
+                url: 'http://localhost:8081/voucher/findByWhere',
                 method: 'get',
                 params: data,
             });

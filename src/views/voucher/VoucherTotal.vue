@@ -49,17 +49,17 @@ export default {
     },
     methods: {
         cheak(row) {
-            localStorage.setItem('voucherID', row.voucherID)
+            localStorage.setItem('voucherID', row.voucherId)
             this.$router.push('/voucher/CheckVoucher');
         },
         async getlist() {
             const res = await axios({
-                url: 'http://localhost:8080/voucher/voucher',
+                url: 'http://localhost:8081/voucher/page',
                 method: 'get',
                 params: {
-                    pageno: this.pageno,
-                    pagesize: this.pagesize,
-                    bookID: localStorage.getItem('bookID')
+                    page: this.pageno,
+                    limit: this.pagesize,
+                    bookId: localStorage.getItem('bookID')
                 }
             })
             this.list = res.data.data;

@@ -25,7 +25,7 @@
                         <!-- 右侧部分，包括查询输入框 -->
                         <el-col :span="9" :offset="14">
                             <el-input placeholder="请输入查询内容" prefix-icon="el-icon-search"
-                                v-model="params.assetName"></el-input>
+                                v-model="params.summaryContent"></el-input>
                         </el-col>
                         <el-col :span="3" :offset="0.5">
                             <el-button type="primary" @click="search">查询</el-button>
@@ -107,7 +107,7 @@ export default {
             pagesize: 4,
             total: 0,
             params: {
-                assetName: '',
+                summaryContent: '',
             },
             show: false,
             addshow: false
@@ -119,12 +119,12 @@ export default {
     methods: {
         async getList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/findAll",
+                url: "http://localhost:8081/summary/page",
                 method: "get",
                 params: {
                     ...this.params,
-                    pageno: this.pageno,
-                    pagesize: this.pagesize,
+                    page: this.pageno,
+                    limit: this.pagesize,
                 }
             });
             this.list = res.data.data;
@@ -157,7 +157,7 @@ export default {
                     summaryID: row.summaryID,
                 }
                 const res = await axios({
-                    url: "http://172.16.110.32:8080/summary/delete",
+                    url: "http://localhost:8081/summary/delete",
                     method: "post",
                     data: data
                 })
@@ -172,7 +172,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/update",
+                url: "http://localhost:8081/summary/update",
                 method: "post",
                 data: data
             })
@@ -188,7 +188,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/add",
+                url: "http://localhost:8081/summary/add",
                 method: "post",
                 data: data
             })

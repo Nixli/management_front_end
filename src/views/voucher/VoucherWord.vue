@@ -130,8 +130,12 @@ export default {
     methods: {
         async getList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/voucherWord/findAll",
+                url: "http://localhost:8081//voucherWord/page",
                 method: "get",
+                params: {
+                    page: 1,
+                    limit: 5,
+                }
             });
             this.list = res.data.data
         },
@@ -152,7 +156,7 @@ export default {
                     voucherWordID: row.voucherWordID,
                 }
                 const res = await axios({
-                    url: "http://172.16.110.32:8080/voucherWord/delete",
+                    url: "http://localhost:8081/voucherWord/delete",
                     method: "post",
                     data: data
                 })
@@ -168,7 +172,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/voucherWord/update",
+                url: "http://localhost:8081/voucherWord/update",
                 method: "post",
                 data: data
             })
@@ -184,7 +188,7 @@ export default {
                 ...this.userFormData
             }
             const res = await axios({
-                url: "http://172.16.110.32:8080/voucherWord/add",
+                url: "http://localhost:8081/voucherWord/add",
                 method: "post",
                 data: data
             })

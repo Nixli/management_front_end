@@ -285,7 +285,7 @@ export default {
         },
         async getSummaryList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/summary/findAll",
+                url: "http://localhost:8081/summary/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -297,7 +297,7 @@ export default {
         },
         async getaccountingAccountList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/accountingAccount/findAll",
+                url: "http://localhost:8081/accounting/findAll",
                 method: "get",
                 params: {
                     ...this.params,
@@ -309,7 +309,7 @@ export default {
         },
         async getVoucherWordList() {
             const res = await axios({
-                url: "http://172.16.110.32:8080/voucherWord/findAll",
+                url: "http://localhost:8081/voucherWord/findAll",
                 method: "get",
             });
             this.voucherWordlist = res.data.data
@@ -324,7 +324,7 @@ export default {
                 maker: this.name,
                 date: dayjs(this.date).format('YYYY-MM-DD'),
                 voucherWord: this.voucherWord,
-                bookID: localStorage.getItem('bookID'),
+                bookId: localStorage.getItem('bookID'),
                 totalAmount: this.finaltotal,
                 voucherNumber: this.no,
                 cime:new Date(),
@@ -335,11 +335,11 @@ export default {
                 })),
             };
             const res = await axios({
-                url: 'http://172.16.110.32:8080/voucher/addVoucher',
+                url: 'http://localhost:8081/voucher/add',
                 method: 'post',
                 data: data
             })
-            if (res.data.code === 200) {
+            if (res.data.code === 0) {
                 Message.success('新增成功,即将进入凭证列表')
                 setTimeout(() => {
                     // 跳转页面
