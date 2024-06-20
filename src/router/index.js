@@ -104,6 +104,11 @@ export const menuRoutes = [
         path: '/Dish',
         component: () => import('@/views/dish/Dish'),
         meta: { title: '菜品大类管理' },
+      },
+      {
+        path: '/Dishes',
+        component: () => import('@/views/dishes/Dishes'),
+        meta: { title: '菜品小类管理' },
       }
     ]
   },
@@ -211,60 +216,60 @@ export const menuRoutes = [
     ]
   },
 
-  /* 固定资产折旧管理 */
-  //财务固定资产管理
-  {
-    path: '/FinanceDepreciation',
-    component: () => import('@/layout/Layout.vue'),
-    meta: { title: '固定资产折旧管理', menu: true, icon: 'el-icon-office-building', role: ['财务', '管理员'] },
-    children: [
-      {
-        path: '',
-        meta: { title: '固定资产折旧明细' },
-        component: () => import('@/views/fixedasset/FinanceDepreciation.vue'),
-      }
-    ]
-  },
-  //用户固定折旧申请
-  {
-    path: '/personalDepreciation',
-    component: () => import('@/layout/Layout.vue'),
-    meta: { title: '资产折旧申请', menu: true, icon: 'el-icon-office-building', role: ['员工'] },
-    children: [
-      {
-        path: '',
-        meta: { title: '申请固定资产折旧' },
-        component: () => import('@/views/fixedasset/PersonalDepreciation.vue'),
-      }
-    ]
-  },
-  //老板端固定资产折旧审批
-  {
-    path: '/BossFixedasset',
-    component: () => import('@/layout/Layout.vue'),
-    meta: { title: '固定资产折旧审核', menu: true, icon: 'el-icon-office-building', role: ['管理员'] },
-    children: [
-      {
-        path: '',
-        meta: { title: '审核资产折旧申请' },
-        component: () => import('@/views/fixedasset/BossDepreciation.vue'),
-      }
-    ]
-  },
+  // /* 固定资产折旧管理 */
+  // //财务固定资产管理
+  // {
+  //   path: '/FinanceDepreciation',
+  //   component: () => import('@/layout/Layout.vue'),
+  //   meta: { title: '固定资产折旧管理', menu: true, icon: 'el-icon-office-building', role: ['财务', '管理员'] },
+  //   children: [
+  //     {
+  //       path: '',
+  //       meta: { title: '固定资产折旧明细' },
+  //       component: () => import('@/views/fixedasset/FinanceDepreciation.vue'),
+  //     }
+  //   ]
+  // },
+  // //用户固定折旧申请
+  // {
+  //   path: '/personalDepreciation',
+  //   component: () => import('@/layout/Layout.vue'),
+  //   meta: { title: '资产折旧申请', menu: true, icon: 'el-icon-office-building', role: ['员工'] },
+  //   children: [
+  //     {
+  //       path: '',
+  //       meta: { title: '申请固定资产折旧' },
+  //       component: () => import('@/views/fixedasset/PersonalDepreciation.vue'),
+  //     }
+  //   ]
+  // },
+  // //老板端固定资产折旧审批
+  // {
+  //   path: '/BossFixedasset',
+  //   component: () => import('@/layout/Layout.vue'),
+  //   meta: { title: '固定资产折旧审核', menu: true, icon: 'el-icon-office-building', role: ['管理员'] },
+  //   children: [
+  //     {
+  //       path: '',
+  //       meta: { title: '审核资产折旧申请' },
+  //       component: () => import('@/views/fixedasset/BossDepreciation.vue'),
+  //     }
+  //   ]
+  // },
 
-  //期末结转
-  {
-    path: '/carryover',
-    component: () => import('@/layout/Layout.vue'),
-    meta: { title: '期末结转', menu: true, icon: 'el-icon-s-marketing', role: ['财务', '管理员'] },
-    children: [
-      {
-        path: '',
-        meta: { title: '期末结转' },
-        component: () => import('@/views/carryover/CarryOver'),
-      },
-    ]
-  },
+  // //期末结转
+  // {
+  //   path: '/carryover',
+  //   component: () => import('@/layout/Layout.vue'),
+  //   meta: { title: '期末结转', menu: true, icon: 'el-icon-s-marketing', role: ['财务', '管理员'] },
+  //   children: [
+  //     {
+  //       path: '',
+  //       meta: { title: '期末结转' },
+  //       component: () => import('@/views/carryover/CarryOver'),
+  //     },
+  //   ]
+  // },
 
    {
     path:'/dishSales',
